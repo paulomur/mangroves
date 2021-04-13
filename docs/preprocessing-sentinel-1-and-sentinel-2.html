@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Mapping mangroves using remote sensing</title>
-  <meta name="description" content="Mapping mangroves using remote sensing" />
+  <title>3 Preprocessing Sentinel-1 and Sentinel-2 | Mapping mangroves using remote sensing</title>
+  <meta name="description" content="3 Preprocessing Sentinel-1 and Sentinel-2 | Mapping mangroves using remote sensing" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Mapping mangroves using remote sensing" />
+  <meta property="og:title" content="3 Preprocessing Sentinel-1 and Sentinel-2 | Mapping mangroves using remote sensing" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Mapping mangroves using remote sensing" />
+  <meta name="twitter:title" content="3 Preprocessing Sentinel-1 and Sentinel-2 | Mapping mangroves using remote sensing" />
   
   
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="mapping-mangroves-using-sentinel12.html"/>
+<link rel="prev" href="mapping-mangroves-using-sentinel12.html"/>
+<link rel="next" href="mapping-mangroves-using-landsat-archive.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -71,13 +71,9 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
-<li class="chapter" data-level="2" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html"><i class="fa fa-check"></i><b>2</b> Mapping mangroves using Sentinel1&amp;2</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html#step1-preprocessing-sentinel-1-and-sentinel-2"><i class="fa fa-check"></i><b>2.1</b> Step1: Preprocessing Sentinel-1 and Sentinel-2</a></li>
-<li class="chapter" data-level="2.2" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html#step2-organizing-a-basemap-get-training-data"><i class="fa fa-check"></i><b>2.2</b> Step2: Organizing a basemap (get training data)</a></li>
-<li class="chapter" data-level="2.3" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html#step3-applying-an-object-based-classifier"><i class="fa fa-check"></i><b>2.3</b> Step3: Applying an object-based classifier</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html"><i class="fa fa-check"></i><b>3</b> Mapping mangroves using Landsat archive</a></li>
+<li class="chapter" data-level="2" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html"><i class="fa fa-check"></i><b>2</b> Mapping mangroves using Sentinel1&amp;2</a></li>
+<li class="chapter" data-level="3" data-path="preprocessing-sentinel-1-and-sentinel-2.html"><a href="preprocessing-sentinel-1-and-sentinel-2.html"><i class="fa fa-check"></i><b>3</b> Preprocessing Sentinel-1 and Sentinel-2</a></li>
+<li class="chapter" data-level="4" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html"><i class="fa fa-check"></i><b>4</b> Mapping mangroves using Landsat archive</a></li>
 <li class="divider"></li>
 <li><a href="https://mangrovescience.org/"</a></li>
 </ul>
@@ -97,22 +93,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Mapping mangroves using remote sensing</h1>
-<p class="author"><em>Paulo J. Murillo-Sandoval</em></p>
-<p class="date"><em>April 13, 2021</em></p>
-</div>
-<div id="overview" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Overview</h1>
-<p>Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.</p>
-<div class="figure"><span id="fig:my-fig"></span>
-<img src="images/mangroves.jpg" alt="Mangroves Source: Pixabay"  />
-<p class="caption">
-Figure 1.1: Mangroves Source: Pixabay
-</p>
-</div>
-<p>This tutorial uses different satellite data to map the current extent of
-mangroves using Sentinel 1 &amp; 2 and historically using Landsat legacy.</p>
+<div id="preprocessing-sentinel-1-and-sentinel-2" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Preprocessing Sentinel-1 and Sentinel-2</h1>
 
 </div>
             </section>
@@ -120,8 +102,8 @@ mangroves using Sentinel 1 &amp; 2 and historically using Landsat legacy.</p>
           </div>
         </div>
       </div>
-
-<a href="mapping-mangroves-using-sentinel12.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mapping-mangroves-using-sentinel12.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mapping-mangroves-using-landsat-archive.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -152,7 +134,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/paulomur/mangroves/edit/master/index.Rmd",
+"link": "https://github.com/paulomur/mangroves/edit/master/2sentinel.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -160,7 +142,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/paulomur/mangroves/edit/master/index.Rmd",
+"link": "https://github.com/paulomur/mangroves/edit/master/2sentinel.Rmd",
 "text": null
 },
 "download": null,

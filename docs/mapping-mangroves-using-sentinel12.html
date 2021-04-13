@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Mapping mangroves using remote sensing</title>
-  <meta name="description" content="Mapping mangroves using remote sensing" />
+  <title>2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing</title>
+  <meta name="description" content="2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Mapping mangroves using remote sensing" />
+  <meta property="og:title" content="2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Mapping mangroves using remote sensing" />
+  <meta name="twitter:title" content="2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing" />
   
   
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="mapping-mangroves-using-sentinel12.html"/>
+<link rel="prev" href="index.html"/>
+<link rel="next" href="mapping-mangroves-using-landsat-archive.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -97,31 +97,48 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Mapping mangroves using remote sensing</h1>
-<p class="author"><em>Paulo J. Murillo-Sandoval</em></p>
-<p class="date"><em>April 13, 2021</em></p>
+<div id="mapping-mangroves-using-sentinel12" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Mapping mangroves using Sentinel1&amp;2</h1>
+<p>We use Colombia as study region for this analysis. However, our analysis can be applied everywhere. The steps to map mangroves and other common land cover classes are:</p>
+<ol style="list-style-type: decimal">
+<li>Pre-processing/Exporting Sentinel-1 and Sentinel-2</li>
+<li>Organizing a basemap (get training data)</li>
+<li>Applying an object-based classifier</li>
+</ol>
+<p>All previous steps can be easily modified for specific conditions.</p>
+<p>First thing is adding the repository:</p>
+<p>In that the repository you can find the main library plus the examples to run the analysis.</p>
+<div id="step1-preprocessing-sentinel-1-and-sentinel-2" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Step1: Preprocessing Sentinel-1 and Sentinel-2</h2>
+<p>Preprocessing data from S1 requires the effective removal of speckle noise
+We use Perona-Malik filter to remove speckle for each image. For Sentinel-2 we remove clouds and shadows. All functions allows to obtain better spectral information for the period 2019-2020.</p>
+<p>After improving the data, a image composite using the “median” across
+all available images is created and saved it as an asset.</p>
 </div>
-<div id="overview" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Overview</h1>
-<p>Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.</p>
-<div class="figure"><span id="fig:my-fig"></span>
-<img src="images/mangroves.jpg" alt="Mangroves Source: Pixabay"  />
-<p class="caption">
-Figure 1.1: Mangroves Source: Pixabay
-</p>
+<div id="step2-organizing-a-basemap-get-training-data" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Step2: Organizing a basemap (get training data)</h2>
+<p>Getting training data is a exhausting process. Mostly manual regularly.
+Here we use previous map created by Colombia Government from which we select specific land cover classes. The basemap follows the Corine Land Cover methodology used officially in Colombia.</p>
+<p>For this exercise, five classes were used:
+1. Mangroves
+2. Water
+3. Dense Forest &gt;80% tree canopy cover
+4. Non-forest &lt;20% tree canopy cover
+5. Other vegetation (shurb, herbaceous, wet forest)</p>
 </div>
-<p>This tutorial uses different satellite data to map the current extent of
-mangroves using Sentinel 1 &amp; 2 and historically using Landsat legacy.</p>
+<div id="step3-applying-an-object-based-classifier" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Step3: Applying an object-based classifier</h2>
+<p>Object-based classifiers are more robust than convetional pixel-based analysis. We used the SNIC algorithm to detect clusters using the Mangroves Vegetation Indices (MVI). See article <a href="https://www.sciencedirect.com/science/article/pii/S0924271620301519?casa_token=LIFdYLRNNL0AAAAA:ZncWGMoyYsAdcQUe8C0rkW7wc7bBO-GqOH0V93xDcxo33om81YZjvPFYMzrWsW7dRl1dmigAXQ" target="_blank"><strong>here</strong></a></p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="mapping-mangroves-using-sentinel12.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mapping-mangroves-using-landsat-archive.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -152,7 +169,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/paulomur/mangroves/edit/master/index.Rmd",
+"link": "https://github.com/paulomur/mangroves/edit/master/2sentinel.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -160,7 +177,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/paulomur/mangroves/edit/master/index.Rmd",
+"link": "https://github.com/paulomur/mangroves/edit/master/2sentinel.Rmd",
 "text": null
 },
 "download": null,
