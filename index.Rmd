@@ -1,9 +1,10 @@
 --- 
-title: "xzxxxxxxx"
-author: "ppppppppppppppppppppppp"
+title: "Mapping mangroves using remote sensing"
+author: "Paulo J. Murillo-Sandoval"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Down the rabbit-hole
+# Overview
 
+Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.
