@@ -8,7 +8,7 @@ site: bookdown::bookdown_site
 
 # Overview
 
-Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.
+Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.....
 
 
 ```{r my-fig, fig.cap="Mangroves Source: Pixabay", echo=FALSE, message=FALSE}
