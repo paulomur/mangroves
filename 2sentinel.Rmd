@@ -1,0 +1,41 @@
+# Mapping mangroves using Sentinel1&2
+
+We use Colombia as study region for this analysis. However, our analysis can be applied everywhere. The steps to map mangroves and other common land cover classes are:
+
+
+1. Pre-processing/Exporting Sentinel-1 and Sentinel-2
+2. Organizing a basemap (get training data)
+3. Applying an object-based classifier
+
+
+All previous steps can be easily modified for specific conditions.
+
+First thing is adding the repository:
+
+In that the repository you can find the main library plus the examples to run the analysis.
+
+
+## Step1: Preprocessing Sentinel-1 and Sentinel-2
+
+Preprocessing data from S1 requires the effective removal of speckle noise
+We use Perona-Malik filter to remove speckle for each image. For Sentinel-2 we remove clouds and shadows. All functions allows to obtain better spectral information for the period 2019-2020.
+
+After improving the data, a image composite using the "median" across
+all available images is created and saved it as an asset.
+
+## Step2:  Organizing a basemap (get training data)
+
+Getting training data is a exhausting process. Mostly manual regularly.
+Here we use previous map created by Colombia Government from which we select specific land cover classes. The basemap follows the Corine Land Cover methodology used officially in Colombia.
+
+For this exercise, five classes were used:
+1. Mangroves
+2. Water
+3. Dense Forest >80% tree canopy cover
+4. Non-forest   <20% tree canopy cover
+5. Other vegetation (shurb, herbaceous, wet forest)
+
+
+## Step3: Applying an object-based classifier
+
+Object-based classifiers are more robust than convetional pixel-based analysis. We used the SNIC algorithm to detect clusters using the Mangroves Vegetation Indices (MVI). See article [**here**](https://www.sciencedirect.com/science/article/pii/S0924271620301519?casa_token=LIFdYLRNNL0AAAAA:ZncWGMoyYsAdcQUe8C0rkW7wc7bBO-GqOH0V93xDcxo33om81YZjvPFYMzrWsW7dRl1dmigAXQ){target="_blank"}
