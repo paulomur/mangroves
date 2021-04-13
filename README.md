@@ -1,13 +1,3 @@
 Tutorial mapping mangroves
 
-
-XXXXXXXXXXXXXXXXXXX
-
-XX
-X
-X
-X
-
-X
-X
-X
+This is a tutorial for mapping mangroves extent in Colombia using different satellite imagery available in [**Google Earth Engine**](https://https://earthengine.google.com/){target="_blank"}
