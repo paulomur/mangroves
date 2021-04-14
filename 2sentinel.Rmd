@@ -4,7 +4,7 @@ We use Colombia as study region for this analysis. However, our analysis can be 
 
 
 1. Pre-processing/Exporting Sentinel-1 and Sentinel-2
-2. Organizing a basemap (get training data)
+2. Organizing a basemap (get training data!!!)
 3. Applying an object-based classifier
 
 

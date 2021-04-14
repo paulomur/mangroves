@@ -17,5 +17,5 @@ knitr::include_graphics("images/mangroves.jpg")
 
 
 This tutorial uses different satellite data to map the current extent of
-mangroves using Sentinel 1 & 2 and historically using Landsat legacy.
+mangroves using Sentinel 1 & 2 and historically using Landsat legacy!!!
 
