@@ -38,4 +38,4 @@ For this exercise, five classes were used:
 
 ## Step3: Applying an object-based classifier
 
-Object-based classifiers are more robust than convetional pixel-based analysis. We used the SNIC algorithm to detect clusters using the Mangroves Vegetation Indices (MVI). See article [**here**](https://www.sciencedirect.com/science/article/pii/S0924271620301519?casa_token=LIFdYLRNNL0AAAAA:ZncWGMoyYsAdcQUe8C0rkW7wc7bBO-GqOH0V93xDcxo33om81YZjvPFYMzrWsW7dRl1dmigAXQ){target="_blank"}
+Object-based classifiers are more robust than conventional pixel-based analysis. We used the SNIC algorithm to detect clusters using the Mangroves Vegetation Indices (MVI). See article [**here**](https://www.sciencedirect.com/science/article/pii/S0924271620301519?casa_token=LIFdYLRNNL0AAAAA:ZncWGMoyYsAdcQUe8C0rkW7wc7bBO-GqOH0V93xDcxo33om81YZjvPFYMzrWsW7dRl1dmigAXQ){target="_blank"}
