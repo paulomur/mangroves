@@ -2,7 +2,7 @@ fig:my-fig
 fig:my-fig2
 overview
 mapping-mangroves-using-sentinel12
-preprocessing-sentinel-1-and-sentinel-2
+preprocessingexporting-sentinel-1-and-sentinel-2
 organizing-a-basemap-get-training-data
-applying-an-object-based-classifier
+indices-and-an-object-based-classifier
 mapping-mangroves-using-landsat-archive

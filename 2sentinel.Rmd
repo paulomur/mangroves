@@ -21,15 +21,54 @@ var man = require('users/murillop/mapping_mangroves:mangroves');
 In that the repository you can find the main library plus the examples to run the analysis.
 
 
-## Preprocessing Sentinel-1 and Sentinel-2
+## Preprocessing/Exporting Sentinel-1 and Sentinel-2
 
 Preprocessing data from S1 requires the effective removal of speckle noise. We use Perona-Malik filter to remove speckle for each image.
 
 
 For Sentinel-2 we remove clouds and shadows. All functions allows to obtain better spectral information for the period 2019-2020.
 
-After improving the data, a image composite using the "median" across
-all available images is created and saved it as an asset.
+After improving the data, a image composite using the "median". We also
+calcuate the standard deviation and percentiles 20th and 80th.
+Finally we save the resulting composite as an asset.
+
+The only parameter needed are:
+
+```{r eval=FALSE}
+# Import library
+var man = require('users/murillop/mapping_mangroves:mangroves');
+
+var region =  ee.Geometry.Polygon(
+        [[[-78.63099738574668, 2.746827033203151],
+          [-78.63099738574668, 2.2295862108717603],
+          [-77.70677253223106, 2.2295862108717603],
+          [-77.70677253223106, 2.746827033203151]]], null, false);
+
+var AOI = region; 
+
+# Parameters
+var params = {
+START_DATE: '2019-01-01',
+END_DATE: '2021-01-01',
+CLOUD_FILTER : 60,   ///CLOUDY_PIXEL_PERCENTAGE. Select less than 60%
+CLD_PRB_THRESH : 20, ///PROBABILITY greater than 20%
+NIR_DRK_THRESH : 0.15,  ///For shadows
+CLD_PRJ_DIST : 1,  ///Project shadows from clouds using distance =1
+BUFFER : 50   ///Buffer around clouds
+};
+```
+
+After modify your parameters you can apply the functions needed for pre-processing
+
+Example:
+Get all S2 images based on parameters. 
+
+```{r eval=FALSE}
+var s2_sr_cld_col_eval = man.get_s2_sr_cld_col(AOI, params); 
+print (s2_sr_cld_col_eval.size(),'number of S2 images');
+```
+
+See the rest of the script on the repository "1.Export_S1_S2_composite".
 
 ## Organizing a basemap (get training data)
 
@@ -44,7 +83,53 @@ For this exercise, five classes were used:
 4. Non-forest   <20% tree canopy cover
 5. Other vegetation (shurb, herbaceous, wet forest)
 
+This function add specific land cover types.
 
-## Applying an object-based classifier
+```{r eval=FALSE}
+var man = require('users/murillop/NASA_mangroves:mangroves');
+# Get Corine Land cover classes
+var corine = man.getCORINE()
+```
 
-Object-based classifiers are more robust than conventional pixel-based analysis. We used the SNIC algorithm to detect clusters using the Mangroves Vegetation Indices (MVI). See article [**here**](https://www.sciencedirect.com/science/article/pii/S0924271620301519?casa_token=LIFdYLRNNL0AAAAA:ZncWGMoyYsAdcQUe8C0rkW7wc7bBO-GqOH0V93xDcxo33om81YZjvPFYMzrWsW7dRl1dmigAXQ){target="_blank"}
+The CLC is from 2012. We update this map using Hansen and JRC datasets for 2019.
+This process helps to obtain classes more "pure" pixels and discard outliers.
+
+
+## Indices and an object-based classifier
+
+We calculate a set of different relevant spectral metrics from the exported asset.
+Relevant vegetation indices and GLCM textural metrics for mapping mangroves were calculate.
+
+To add them into the exported asset.
+
+```{r eval=FALSE}
+# Read S1+S2
+var s1_s2 = ee.Image("projects/mangrovescience/SilviaCarbon_COL/Sentinel_Predictors/s1_s2_2019-01-01_2021-01-01")
+# Read S2 only and calculate different predictors (Indices+GLCM indicators)
+var s2 =s1_s2.select('B.*');
+s2 =man.doIndices2(ee.ImageCollection(s2));
+```
+
+Now we have S2 data, then we add S1 bands:
+
+```{r eval=FALSE}
+var s1 =ee.Image("projects/mangrovescience/SilviaCarbon_COL/Sentinel_Predictors/s1_s2_2019-01-01_2021-01-01")
+          .select('VV','VH');
+var s1s2_new = s2.addBands(s1);
+var bands = s1s2_new.bandNames();
+print(s1s2_new, 's1s2_new');
+```
+
+Once we have our final set of predictors we can apply a object-based classifier.
+
+Object-based classifiers are more robust than conventional pixel-based analysis. We used the SNIC algorithm to detect clusters using the Mangroves Vegetation Index (MVI). See article [**here**](https://www.sciencedirect.com/science/article/pii/S0924271620301519?casa_token=LIFdYLRNNL0AAAAA:ZncWGMoyYsAdcQUe8C0rkW7wc7bBO-GqOH0V93xDcxo33om81YZjvPFYMzrWsW7dRl1dmigAXQ){target="_blank"}
+
+User can modify MVI for any other index or metric.
+
+```{r eval=FALSE}
+#Define SNIC
+var snic_sen1_2 = man.snic_mangroves_sentinel(s1s2_new.select(bands), 'MVI'); // You can pick other index
+var predictionBands=snic_sen1_2.bandNames().remove('clusters');
+snic_sen1_2 = snic_sen1_2.select(predictionBands);
+```
+
