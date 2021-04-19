@@ -8,14 +8,17 @@ site: bookdown::bookdown_site
 
 # Overview
 
-Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.....
+Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. This is why we use field and remote observations to monitor its status.
+
+This tutorial uses different satellite data to map the current extent of mangroves using Sentinel 1 & 2 and historically using Landsat legacy. This project is funded by [**SilvaCarbon**](https://www.silvacarbon.org/){target="_blank"} and the study region is Colombia.
+
+More info about other mangroves related projects **https://mangrovescience.org/** (PI. Lola Fatoyinbo)
 
 
-```{r my-fig, fig.cap="Mangroves Source: Pixabay", echo=FALSE, message=FALSE}
+```{r my-fig,  fig.cap="Mangroves Source: Pixabay", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/mangroves.jpg")
 ```
 
 
-This tutorial uses different satellite data to map the current extent of
-mangroves using Sentinel 1 & 2 and historically using Landsat legacy!!!
+
 

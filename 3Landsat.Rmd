@@ -7,6 +7,6 @@ The Colombian Pacific is the most rainy region worldwide, consequently obtain cl
 Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from Landtrendr.
 
 
-```{r my-fig2, fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
+```{r my-fig2, out.width = "450px",fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/LandTrendr.png")
 ```
