@@ -141,7 +141,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html#organizing-a-basemap-get-training-data"><i class="fa fa-check"></i><b>2.2</b> Organizing a basemap (get training data)</a></li>
 <li class="chapter" data-level="2.3" data-path="mapping-mangroves-using-sentinel12.html"><a href="mapping-mangroves-using-sentinel12.html#indices-and-an-object-based-classifier"><i class="fa fa-check"></i><b>2.3</b> Indices and an object-based classifier</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html"><i class="fa fa-check"></i><b>3</b> Mapping mangroves using Landsat archive</a></li>
+<li class="chapter" data-level="3" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html"><i class="fa fa-check"></i><b>3</b> Mapping mangroves using Landsat archive</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#making-fitted-values-using-landsat-archive"><i class="fa fa-check"></i><b>3.1</b> Making fitted values using Landsat archive</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#remove-bad-imagery"><i class="fa fa-check"></i><b>3.1.1</b> Remove bad imagery</a></li>
+<li class="chapter" data-level="3.1.2" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#input-parameters-1"><i class="fa fa-check"></i><b>3.1.2</b> Input parameters (1)</a></li>
+<li class="chapter" data-level="3.1.3" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#input-parameters-2"><i class="fa fa-check"></i><b>3.1.3</b> Input parameters (2)</a></li>
+<li class="chapter" data-level="3.1.4" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#adding-percentiles"><i class="fa fa-check"></i><b>3.1.4</b> Adding percentiles</a></li>
+<li class="chapter" data-level="3.1.5" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#exporting-assets"><i class="fa fa-check"></i><b>3.1.5</b> Exporting assets</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="mapping-mangroves-using-landsat-archive.html"><a href="mapping-mangroves-using-landsat-archive.html#building-3-years-composite-maps"><i class="fa fa-check"></i><b>3.2</b> Building 3-years composite maps</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://mangrovescience.org/"</a></li>
 </ul>
@@ -166,13 +177,124 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>For mapping historical mangroves change using Landsat our approach is a bit different than for S1+S2.</p>
 <p>The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ LandTrendr.</p>
 <p>Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from Landtrendr.</p>
+<p>This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
+filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps</p>
 <div class="figure"><span id="fig:my-fig2"></span>
 <img src="images/LandTrendr.png" alt="LandTrendr segmentation example" width="450px" />
 <p class="caption">
 Figure 3.1: LandTrendr segmentation example
 </p>
 </div>
+<div id="making-fitted-values-using-landsat-archive" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Making fitted values using Landsat archive</h2>
+<p>Landsat is a popular satellite that aids to consistently track Earth’ land surface.
+In tropical areas clouds and lack of Landsat observations affect tracking evolution of changes. Using LandTrendr we improve Landsat itself through some steps:</p>
+<div id="remove-bad-imagery" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Remove bad imagery</h3>
+<p>In some cases even after removing masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.</p>
+<p>This process mainly important for early years in 80 and 90’s. Given that few images are available, onyl one with problems can affect our final composite product.</p>
+<p>Using the <a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e" target="_blank"><strong>Remove bad imagery</strong></a> code in the repository you can identify which ones should not be included in the process.</p>
+<div class="figure"><span id="fig:my-fig3"></span>
+<img src="images/bad.PNG" alt="Image with remaing clouds (left), original image (right)" width="150%" />
+<p class="caption">
+Figure 3.2: Image with remaing clouds (left), original image (right)
+</p>
+</div>
+<p>After you pick those images that cannot be part of the process, you can exclude using ’ not_contains’ from the
+code <a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e" target="_blank"><strong>Export_Landsat</strong></a></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="mapping-mangroves-using-landsat-archive.html#cb10-1" aria-hidden="true" tabindex="-1"></a>var getSRcollection <span class="ot">=</span> <span class="cf">function</span>(firstYear,lastYear, startDay, endDay, sensor, box) {</span>
+<span id="cb10-2"><a href="mapping-mangroves-using-landsat-archive.html#cb10-2" aria-hidden="true" tabindex="-1"></a>  var srCollection <span class="ot">=</span> <span class="fu">ee.ImageCollection</span>(<span class="st">&#39;LANDSAT/&#39;</span><span class="sc">+</span> sensor <span class="sc">+</span> <span class="st">&#39;/C01/T1_SR&#39;</span>) <span class="sc">/</span><span class="er">/</span><span class="co"># get surface reflectance images</span></span>
+<span id="cb10-3"><a href="mapping-mangroves-using-landsat-archive.html#cb10-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">.filterBounds</span>(box) <span class="sc">/</span><span class="er">/</span><span class="co"># filter them by a bounding box</span></span>
+<span id="cb10-4"><a href="mapping-mangroves-using-landsat-archive.html#cb10-4" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">.filter</span>(<span class="fu">ee.Filter.calendarRange</span>(day_start,day_end,<span class="st">&#39;day_of_month&#39;</span>))</span>
+<span id="cb10-5"><a href="mapping-mangroves-using-landsat-archive.html#cb10-5" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">.filter</span>(<span class="fu">ee.Filter.calendarRange</span>(month_start,month_end,<span class="st">&#39;month&#39;</span>)) </span>
+<span id="cb10-6"><a href="mapping-mangroves-using-landsat-archive.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">.filter</span>(<span class="fu">ee.Filter.calendarRange</span>(firstYear,lastYear,<span class="st">&#39;year&#39;</span>))</span>
+<span id="cb10-7"><a href="mapping-mangroves-using-landsat-archive.html#cb10-7" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">.filterMetadata</span>(<span class="st">&#39;system:index&#39;</span>, <span class="st">&#39;not_contains&#39;</span>, <span class="st">&#39;LT04_010059_19871113&#39;</span>)}</span></code></pre></div>
+</div>
+<div id="input-parameters-1" class="section level3" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Input parameters (1)</h3>
+<p>Common parameters in LandTrendr includes the name of the task, region, years and others.
+In this example we use NBR as main index for segmentation and the new fitted bands will be the spectral bands
+from Landsat. Our outputs fitted data could be also other indices not necessarily the spectral bands. We use “Medoid” to create the composites but we can also used a targetDay. The code that includes all next steps is
+<a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e" target="_blank"><strong>Export_Landsat</strong></a></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="mapping-mangroves-using-landsat-archive.html#cb11-1" aria-hidden="true" tabindex="-1"></a>var featureValues <span class="ot">=</span> [<span class="st">&#39;Man&#39;</span>]; <span class="sc">/</span><span class="er">/</span> Name  it is useful <span class="cf">if</span> you want to export many different regions</span>
+<span id="cb11-2"><a href="mapping-mangroves-using-landsat-archive.html#cb11-2" aria-hidden="true" tabindex="-1"></a>var featureCol <span class="ot">=</span> geometry;   <span class="sc">/</span><span class="er">/</span> Region to be exported</span>
+<span id="cb11-3"><a href="mapping-mangroves-using-landsat-archive.html#cb11-3" aria-hidden="true" tabindex="-1"></a>var featureKey <span class="ot">=</span> <span class="st">&#39;Col&#39;</span>;      <span class="sc">/</span><span class="er">/</span> Name <span class="dv">2</span> <span class="sc">/</span><span class="er">/</span> it is useful <span class="cf">if</span> you want to export many different regions</span>
+<span id="cb11-4"><a href="mapping-mangroves-using-landsat-archive.html#cb11-4" aria-hidden="true" tabindex="-1"></a>var startYear <span class="ot">=</span> <span class="dv">1985</span>; <span class="sc">/</span><span class="er">/</span> what year do you want to start the time series  </span>
+<span id="cb11-5"><a href="mapping-mangroves-using-landsat-archive.html#cb11-5" aria-hidden="true" tabindex="-1"></a>var endYear <span class="ot">=</span> <span class="dv">2020</span>; <span class="sc">/</span><span class="er">/</span> what year do you want to end the time series</span>
+<span id="cb11-6"><a href="mapping-mangroves-using-landsat-archive.html#cb11-6" aria-hidden="true" tabindex="-1"></a>var startDay <span class="ot">=</span>[<span class="st">&#39;01-01&#39;</span>]; <span class="sc">/</span><span class="er">/</span> what is the beginning of date filter <span class="sc">|</span> month<span class="sc">-</span>day</span>
+<span id="cb11-7"><a href="mapping-mangroves-using-landsat-archive.html#cb11-7" aria-hidden="true" tabindex="-1"></a>var endDay <span class="ot">=</span>  [<span class="st">&#39;12-31&#39;</span>]; <span class="sc">/</span><span class="er">/</span> what is the end of date filter <span class="sc">|</span> month<span class="sc">-</span>day</span>
+<span id="cb11-8"><a href="mapping-mangroves-using-landsat-archive.html#cb11-8" aria-hidden="true" tabindex="-1"></a>var indexList <span class="ot">=</span> [[<span class="st">&#39;NBR&#39;</span>, <span class="sc">-</span><span class="dv">1</span>, true]];  <span class="sc">/</span><span class="er">/</span> The indices to segment on and the invert coefficient</span>
+<span id="cb11-9"><a href="mapping-mangroves-using-landsat-archive.html#cb11-9" aria-hidden="true" tabindex="-1"></a>var ftvList <span class="ot">=</span> [<span class="st">&#39;B1&#39;</span>, <span class="st">&#39;B2&#39;</span>, <span class="st">&#39;B3&#39;</span>, <span class="st">&#39;B4&#39;</span>, <span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B7&#39;</span>]; <span class="sc">/</span><span class="er">/</span> List of images to export</span>
+<span id="cb11-10"><a href="mapping-mangroves-using-landsat-archive.html#cb11-10" aria-hidden="true" tabindex="-1"></a>var vertList <span class="ot">=</span>[];<span class="sc">/</span><span class="er">/</span> <span class="st">&#39;YRS&#39;</span>, <span class="st">&#39;SRC&#39;</span>, <span class="st">&#39;FIT&#39;</span></span>
+<span id="cb11-11"><a href="mapping-mangroves-using-landsat-archive.html#cb11-11" aria-hidden="true" tabindex="-1"></a>var mosaicType <span class="ot">=</span> <span class="st">&quot;medoid&quot;</span>; <span class="sc">/</span><span class="er">/</span> how to make annual mosaic <span class="sc">-</span> options<span class="sc">:</span> <span class="st">&quot;medoid&quot;</span>, <span class="st">&quot;targetDay&quot;</span></span>
+<span id="cb11-12"><a href="mapping-mangroves-using-landsat-archive.html#cb11-12" aria-hidden="true" tabindex="-1"></a>var targetDay <span class="ot">=</span> null ; <span class="sc">/</span><span class="er">/</span> you can use <span class="dv">172</span> here rather than null <span class="cf">if</span> use <span class="st">&quot;targetDay&quot;</span> <span class="sc">/</span><span class="er">/</span> <span class="cf">if</span> running <span class="st">&quot;targetDay&quot;</span> mosaic, what day of year should be the target</span>
+<span id="cb11-13"><a href="mapping-mangroves-using-landsat-archive.html#cb11-13" aria-hidden="true" tabindex="-1"></a>var outProj <span class="ot">=</span> <span class="st">&#39;EPSG:32618&#39;</span>; <span class="sc">/</span><span class="er">/</span> what should the output projection be? <span class="st">&#39;EPSG:2317&#39;</span> <span class="cf">for</span> SouthAmerica</span>
+<span id="cb11-14"><a href="mapping-mangroves-using-landsat-archive.html#cb11-14" aria-hidden="true" tabindex="-1"></a>var gDriveFolder <span class="ot">=</span> <span class="st">&#39;SilviaCarbon_COL&#39;</span><span class="sc">/</span><span class="er">/</span><span class="sc">+</span>  featureKey <span class="sc">+</span> <span class="st">&#39;_&#39;</span> <span class="sc">+</span> indexList[<span class="dv">0</span>][<span class="dv">0</span>]; <span class="sc">/</span><span class="er">/</span> what is the name of the Google Drive folder that you want the outputs placed <span class="cf">in</span></span>
+<span id="cb11-15"><a href="mapping-mangroves-using-landsat-archive.html#cb11-15" aria-hidden="true" tabindex="-1"></a>var affine <span class="ot">=</span> [<span class="fl">30.0</span>, <span class="dv">0</span>, <span class="fl">15.0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="fl">30.0</span>, <span class="fl">15.0</span>];</span>
+<span id="cb11-16"><a href="mapping-mangroves-using-landsat-archive.html#cb11-16" aria-hidden="true" tabindex="-1"></a>var aoiBuffer <span class="ot">=</span> <span class="dv">30</span>; <span class="sc">/</span><span class="er">/</span><span class="dv">1</span> pixel</span></code></pre></div>
+<p>This inputs can be modified to export many different regions at the same time. For instance if you have a FeatureCollection with a field called <strong>PATH_ROW</strong> and the values names are (‘7058’,‘7059’) you can export them individually as:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mapping-mangroves-using-landsat-archive.html#cb12-1" aria-hidden="true" tabindex="-1"></a>var featureValues <span class="ot">=</span> [<span class="st">&#39;7058&#39;</span>, <span class="st">&#39;7059&#39;</span>]; <span class="sc">/</span><span class="er">/</span> Name  it is useful <span class="cf">if</span> you want to export many different regions</span>
+<span id="cb12-2"><a href="mapping-mangroves-using-landsat-archive.html#cb12-2" aria-hidden="true" tabindex="-1"></a>var featureCol <span class="ot">=</span> yourFeatureCollection;   <span class="sc">/</span><span class="er">/</span> Region to be exported</span>
+<span id="cb12-3"><a href="mapping-mangroves-using-landsat-archive.html#cb12-3" aria-hidden="true" tabindex="-1"></a>var featureKey <span class="ot">=</span> <span class="st">&#39;PATH_ROW&#39;</span>;      <span class="sc">/</span><span class="er">/</span> Name <span class="dv">2</span> <span class="sc">/</span><span class="er">/</span> Name of the field</span>
+<span id="cb12-4"><a href="mapping-mangroves-using-landsat-archive.html#cb12-4" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+<p>More details about this step on (<a href="https://emapr.github.io/LT-GEE/landtrendr.html" class="uri">https://emapr.github.io/LT-GEE/landtrendr.html</a>)</p>
+</div>
+<div id="input-parameters-2" class="section level3" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Input parameters (2)</h3>
+<p>LandTrendr works over annual composites. In some regions, it is possible to use annual observations however in the Colombian Pacific there is too few data. The only alternative is to increase the
+temporal window. In this case we use three-year composites from 1985-2020. In other words we have 12 temporal periods for tracking mangroves extent and change. This code helps to create composites every one, two or any window you want.
+However, if you want to change epochLen, you also have to consider changing the startYear and endYear because the epoch might not exactly match with the amount of years.</p>
+<p>In this cases our startYear = 1985, endYear=2020 and our epochLen =3</p>
+<div class="figure"><span id="fig:my-fig4"></span>
+<img src="images/epochs.PNG" alt="Epochs" width="30%" />
+<p class="caption">
+Figure 3.3: Epochs
+</p>
+</div>
+</div>
+<div id="adding-percentiles" class="section level3" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Adding percentiles</h3>
+<p>Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification of similar land cover classes. In the same code we add the Percentile 20, 80 and Standard Deviation.
+Before running the code, you must create an ImageCollection in you Earth Engine account. This Collection will host all these additional information.</p>
+<p>You can just go to Assest Tab, New, Image Collection. Once you create it you can modify the assetId name:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="mapping-mangroves-using-landsat-archive.html#cb13-1" aria-hidden="true" tabindex="-1"></a>percentil</span>
+<span id="cb13-2"><a href="mapping-mangroves-using-landsat-archive.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.aggregate_array</span>(<span class="st">&#39;system:index&#39;</span>)</span>
+<span id="cb13-3"><a href="mapping-mangroves-using-landsat-archive.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.evaluate</span>(<span class="cf">function</span> (systemIndexes) {</span>
+<span id="cb13-4"><a href="mapping-mangroves-using-landsat-archive.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">systemIndexes.forEach</span>(<span class="cf">function</span> (systemIndex, i) {</span>
+<span id="cb13-5"><a href="mapping-mangroves-using-landsat-archive.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">/</span><span class="er">/</span> <span class="fu">print</span>(i) <span class="sc">/</span><span class="er">/</span> This is your <span class="dv">0</span><span class="sc">-</span>based index</span>
+<span id="cb13-6"><a href="mapping-mangroves-using-landsat-archive.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  var image <span class="ot">=</span> percentil</span>
+<span id="cb13-7"><a href="mapping-mangroves-using-landsat-archive.html#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.filterMetadata</span>(<span class="st">&#39;system:index&#39;</span>, <span class="st">&#39;equals&#39;</span>, systemIndex)</span>
+<span id="cb13-8"><a href="mapping-mangroves-using-landsat-archive.html#cb13-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.first</span>();</span>
+<span id="cb13-9"><a href="mapping-mangroves-using-landsat-archive.html#cb13-9" aria-hidden="true" tabindex="-1"></a>    var oldIndex <span class="ot">=</span> <span class="fu">msToFrac</span>(<span class="fu">image.get</span>(<span class="st">&#39;system:time_start&#39;</span>))<span class="fu">.int16</span>(); <span class="sc">/</span><span class="er">/</span>get mills to year</span>
+<span id="cb13-10"><a href="mapping-mangroves-using-landsat-archive.html#cb13-10" aria-hidden="true" tabindex="-1"></a>    image <span class="ot">=</span> <span class="fu">image.set</span>(<span class="st">&#39;composite_year&#39;</span>, oldIndex)<span class="fu">.clip</span>(featureCol);</span>
+<span id="cb13-11"><a href="mapping-mangroves-using-landsat-archive.html#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="sc">/</span><span class="er">/</span><span class="fu">print</span> (image)  </span>
+<span id="cb13-12"><a href="mapping-mangroves-using-landsat-archive.html#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Export.image.toAsset</span>({</span>
+<span id="cb13-13"><a href="mapping-mangroves-using-landsat-archive.html#cb13-13" aria-hidden="true" tabindex="-1"></a>      image<span class="sc">:</span> image,</span>
+<span id="cb13-14"><a href="mapping-mangroves-using-landsat-archive.html#cb13-14" aria-hidden="true" tabindex="-1"></a>      description<span class="sc">:</span> <span class="st">&#39;percentiles_&#39;</span> <span class="sc">+</span> i,</span>
+<span id="cb13-15"><a href="mapping-mangroves-using-landsat-archive.html#cb13-15" aria-hidden="true" tabindex="-1"></a>      assetId<span class="sc">:</span> <span class="st">&#39;YourCollectionName/percentiles_&#39;</span> <span class="sc">+</span> i, </span>
+<span id="cb13-16"><a href="mapping-mangroves-using-landsat-archive.html#cb13-16" aria-hidden="true" tabindex="-1"></a>      crs<span class="sc">:</span> outProj,</span>
+<span id="cb13-17"><a href="mapping-mangroves-using-landsat-archive.html#cb13-17" aria-hidden="true" tabindex="-1"></a>      scale<span class="sc">:</span> <span class="dv">30</span>,</span>
+<span id="cb13-18"><a href="mapping-mangroves-using-landsat-archive.html#cb13-18" aria-hidden="true" tabindex="-1"></a>      maxPixels<span class="sc">:</span> <span class="fl">1e13</span>,</span>
+<span id="cb13-19"><a href="mapping-mangroves-using-landsat-archive.html#cb13-19" aria-hidden="true" tabindex="-1"></a>      region<span class="sc">:</span> featureCol,</span>
+<span id="cb13-20"><a href="mapping-mangroves-using-landsat-archive.html#cb13-20" aria-hidden="true" tabindex="-1"></a>    });      </span>
+<span id="cb13-21"><a href="mapping-mangroves-using-landsat-archive.html#cb13-21" aria-hidden="true" tabindex="-1"></a>  });</span>
+<span id="cb13-22"><a href="mapping-mangroves-using-landsat-archive.html#cb13-22" aria-hidden="true" tabindex="-1"></a>});</span></code></pre></div>
+</div>
+<div id="exporting-assets" class="section level3" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Exporting assets</h3>
+<p>After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes afte you can export the data. You should see something like this:</p>
+<div class="figure"><span id="fig:my-fig5"></span>
+<img src="images/tasks.PNG" alt="Tasks" width="80%" />
+<p class="caption">
+Figure 3.4: Tasks
+</p>
+</div>
+</div>
+</div>
+<div id="building-3-years-composite-maps" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Building 3-years composite maps</h2>
 
+</div>
 </div>
             </section>
 

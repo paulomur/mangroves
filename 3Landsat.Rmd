@@ -6,7 +6,142 @@ The Colombian Pacific is the most rainy region worldwide, consequently obtain cl
 
 Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from Landtrendr.
 
+This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
+filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps  
+
 
 ```{r my-fig2, out.width = "450px",fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/LandTrendr.png")
 ```
+
+## Making fitted values using Landsat archive
+
+Landsat is a popular satellite that aids to consistently track Earth' land surface.
+In tropical areas clouds and lack of Landsat observations affect tracking evolution of changes. Using LandTrendr we improve Landsat itself through some steps:
+
+
+### Remove bad imagery 
+
+In some cases even after removing masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.
+
+This process mainly important for early years in 80 and 90's. Given that few images are available, onyl one with problems can affect our final composite product.
+
+Using the [**Remove bad imagery**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"} code in the repository you can identify which ones should not be included in the process.
+
+
+```{r my-fig3, out.width = "150%", fig.cap="Image with remaing clouds (left), original image (right)", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/bad.PNG")
+```
+
+After you pick those images that cannot be part of the process, you can exclude using ' not_contains' from the 
+code [**Export_Landsat**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"}
+
+```{r eval=FALSE}
+var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box) {
+  var srCollection = ee.ImageCollection('LANDSAT/'+ sensor + '/C01/T1_SR') //# get surface reflectance images
+                       .filterBounds(box) //# filter them by a bounding box
+                       .filter(ee.Filter.calendarRange(day_start,day_end,'day_of_month'))
+                       .filter(ee.Filter.calendarRange(month_start,month_end,'month')) 
+                       .filter(ee.Filter.calendarRange(firstYear,lastYear,'year'))
+                       .filterMetadata('system:index', 'not_contains', 'LT04_010059_19871113')}
+```
+
+
+
+### Input parameters (1)
+
+Common parameters in LandTrendr includes the name of the task, region, years and others.
+In this example we use NBR as main index for segmentation and the new fitted bands will be the spectral bands 
+from Landsat. Our outputs fitted data could be also other indices not necessarily the spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The code that includes all next steps is
+[**Export_Landsat**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"}
+
+```{r eval=FALSE}
+var featureValues = ['Man']; // Name  it is useful if you want to export many different regions
+var featureCol = geometry;   // Region to be exported
+var featureKey = 'Col';      // Name 2 // it is useful if you want to export many different regions
+var startYear = 1985; // what year do you want to start the time series  
+var endYear = 2020; // what year do you want to end the time series
+var startDay =['01-01']; // what is the beginning of date filter | month-day
+var endDay =  ['12-31']; // what is the end of date filter | month-day
+var indexList = [['NBR', -1, true]];  // The indices to segment on and the invert coefficient
+var ftvList = ['B1', 'B2', 'B3', 'B4', 'B5', 'B7']; // List of images to export
+var vertList =[];// 'YRS', 'SRC', 'FIT'
+var mosaicType = "medoid"; // how to make annual mosaic - options: "medoid", "targetDay"
+var targetDay = null ; // you can use 172 here rather than null if use "targetDay" // if running "targetDay" mosaic, what day of year should be the target
+var outProj = 'EPSG:32618'; // what should the output projection be? 'EPSG:2317' for SouthAmerica
+var gDriveFolder = 'SilviaCarbon_COL'//+  featureKey + '_' + indexList[0][0]; // what is the name of the Google Drive folder that you want the outputs placed in
+var affine = [30.0, 0, 15.0, 0, -30.0, 15.0];
+var aoiBuffer = 30; //1 pixel
+```
+
+This inputs can be modified to export many different regions at the same time. For instance if you have a FeatureCollection with a field called **PATH_ROW** and the values names are ('7058','7059') you can export them individually as:
+
+```{r eval=FALSE}
+var featureValues = ['7058', '7059']; // Name  it is useful if you want to export many different regions
+var featureCol = yourFeatureCollection;   // Region to be exported
+var featureKey = 'PATH_ROW';      // Name 2 // Name of the field
+...
+
+```
+More details about this step on (https://emapr.github.io/LT-GEE/landtrendr.html)
+
+
+### Input parameters (2)
+
+LandTrendr works over annual composites. In some regions, it is possible to use annual observations however in the Colombian Pacific there is too few data. The only alternative is to increase the 
+temporal window. In this case we use three-year composites from 1985-2020. In other words we have 12 temporal periods for tracking mangroves extent and change. This code helps to create composites every one, two or any window you want.
+However, if you want to change epochLen, you also have to consider changing the startYear and endYear because the epoch might not exactly match with the amount of years. 
+
+In this cases our startYear = 1985, endYear=2020 and our epochLen =3
+
+```{r my-fig4, out.width = "30%", fig.cap="Epochs", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/epochs.png")
+```
+
+### Adding percentiles
+
+Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification of similar land cover classes. In the same code we add the Percentile 20, 80 and Standard Deviation.
+Before running the code, you must create an ImageCollection in you Earth Engine account. This Collection will host all these additional information.
+
+You can just go to Assest Tab, New, Image Collection. Once you create it you can modify the assetId name:
+
+```{r eval=FALSE}
+percentil
+.aggregate_array('system:index')
+.evaluate(function (systemIndexes) {
+  systemIndexes.forEach(function (systemIndex, i) {
+  // print(i) // This is your 0-based index
+  var image = percentil
+      .filterMetadata('system:index', 'equals', systemIndex)
+      .first();
+    var oldIndex = msToFrac(image.get('system:time_start')).int16(); //get mills to year
+    image = image.set('composite_year', oldIndex).clip(featureCol);
+    //print (image)  
+    Export.image.toAsset({
+      image: image,
+      description: 'percentiles_' + i,
+      assetId: 'YourCollectionName/percentiles_' + i, 
+      crs: outProj,
+      scale: 30,
+      maxPixels: 1e13,
+      region: featureCol,
+    });      
+  });
+});
+```
+
+### Exporting assets
+
+After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes after you can  export the data. You should see something like this:
+
+```{r my-fig5, out.width = "80%", fig.cap="Tasks", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/tasks.PNG")
+```
+
+
+## Building 3-years composite maps
+
+
+
+
+
