@@ -3,12 +3,14 @@ fig:my-fig2
 fig:my-fig3
 fig:my-fig4
 fig:my-fig5
+fig:my-fig6
 overview
 mapping-mangroves-using-sentinel12
 preprocessingexporting-sentinel-1-and-sentinel-2
 organizing-a-basemap-get-training-data
 indices-and-an-object-based-classifier
-mapping-mangroves-using-landsat-archive
+accuracy-and-cleaning-the-final-product
+mapping-mangroves-using-landsat
 making-fitted-values-using-landsat-archive
 remove-bad-imagery
 input-parameters-1

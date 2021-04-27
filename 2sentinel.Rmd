@@ -1,6 +1,6 @@
 # Mapping mangroves using Sentinel1&2
 
-We use Colombia as study region for this analysis. However, our analysis can be applied everywhere. The steps to map mangroves and other common land cover classes are:
+We use Colombia as study region for this analysis. However, our method can be applied everywhere. The steps to map mangroves and other common land cover classes are:
 
 
 1. Pre-processing/Exporting Sentinel-1 and Sentinel-2
@@ -35,7 +35,6 @@ Finally we save the resulting composite as an asset.
 The only parameter needed are:
 
 ```{r eval=FALSE}
-//# Import library
 var man = require('users/murillop/mapping_mangroves:mangroves');
 
 var region =  ee.Geometry.Polygon(
@@ -46,7 +45,6 @@ var region =  ee.Geometry.Polygon(
 
 var AOI = region; 
 
-//# Parameters
 var params = {
 START_DATE: '2019-01-01',
 END_DATE: '2021-01-01',
@@ -74,7 +72,7 @@ var s2 = s2_sr_cld_col_eval.map(function(img){return man.add_cld_shdw_mask(img, 
 s2 =s2.map(function(img){return man.apply_cld_shdw_mask(img, params)});
 ```
 
-See the rest of the script on the repository "1.Export_S1_S2_composite".
+See the rest of the script on the repository [**1.Export_S1_S2_composite**](https://code.earthengine.google.com/b0f683d0e8d16299980d7336f6209640){target="_blank"}
 
 ## Organizing a basemap (get training data)
 
@@ -88,6 +86,8 @@ For this exercise, five classes were used:
 3. Dense Forest >80% tree canopy cover
 4. Non-forest   <20% tree canopy cover
 5. Other vegetation (shurb, herbaceous, wet forest)
+
+The code used [**2.Classification_S1_S2**](https://code.earthengine.google.com/41966d94c620cb879ce4c8f768f20005){target="_blank"}
 
 This function add specific land cover types.
 
@@ -103,6 +103,8 @@ This process helps to obtain classes more "pure" pixels, discard outliers and up
 For instance in the case of mangroves class, I updated the class taking into account the presence of
 water in S1 and forest/non-forest mask derived from Hansen.
 
+
+
 ```{r eval=FALSE}
 #Update **manglar** class when it is water and when it is non-forest.
 var manglar1 = corine.select('manglar')
@@ -114,8 +116,7 @@ var manglar1 = corine.select('manglar')
 
 ## Indices and an object-based classifier
 
-We calculate a set of different relevant spectral metrics from the exported asset.
-Relevant vegetation indices and GLCM textural metrics for mapping mangroves were calculate.
+We calculate a set of different relevant spectral metrics from the exported asset. The code used **2.Classification_S1_S2**. Relevant vegetation indices and GLCM textural metrics for mapping mangroves were calculate.
 
 To add them into the exported asset.
 
@@ -144,12 +145,56 @@ Object-based classifiers are more robust than conventional pixel-based analysis.
 User can modify MVI for any other index or metric. They current available indices are:
 NBR, NDVI, NDMI, MNDWI, MVI, CMRI, GLCM (8 metrics). If you want to add your a different index, you should update the main library **mangroves**.
 
-
-
 ```{r eval=FALSE}
 //# Define SNIC
 var snic_sen1_2 = man.snic_mangroves_sentinel(s1s2_new.select(bands), 'MVI'); #// You can pick other index
 var predictionBands=snic_sen1_2.bandNames().remove('clusters');
 snic_sen1_2 = snic_sen1_2.select(predictionBands);
+```
+Now we can create sampled points for the five classes. 
+
+```{r eval=FALSE}
+var stratified = basemap.addBands(ee.Image.pixelLonLat())
+    .stratifiedSample({
+      numPoints: 10,
+      classBand: 'class',
+      scale: 20,
+      region: snic_sen1_2.geometry(), //new_area, 
+      classValues:[1,2,3,4,5],   //  1=manglar   // 2 = forest // 3= nonforest  //4 water //5 Herbazal-
+      classPoints: [1000, 1000, 1000, 1000, 500],  
+    }).map(function(f) {
+      return f.setGeometry(ee.Geometry.Point([f.get('longitude'), f.get('latitude')]));
+    });
+print ('Points per class', stratified.reduceColumns(ee.Reducer.frequencyHistogram(),['class']));
+```
+We can export the training (70%) and testing points (30%) for further improvement and export the final map with specific metadata.
+
+```{r eval=FALSE}
+Export.image.toAsset({
+  image: image_classified.setMulti({
+    processing: '16-03-2021', //Change the date 
+    comment:"Second S1+S2 5 classes SNIC",   
+    code: 'https://code.earthengine.google.com/174f2b05945fd70898de48ef6d02c4d8',  //#Save the link of the code 
+    user: 'PauloJ', 
+  }),
+  description: 'S1S2_classification_SNIC',
+  scale: 20,
+  assetId: 'SilviaCarbon_COL/S1S2_2019_2020/S1S2_class_SNIC_R2',
+  region: image_classified.geometry(), //new_area
+  maxPixels: 1e13
+})
+```
+
+## Accuracy and cleaning the final product
+
+A basic accuracy assessment using the testing points help us to understand how well the classification process performs.
+See code [**3.Accuracy_test_S1_S2**](https://code.earthengine.google.com/e56df0dfddb41c164f3fd755b9e1572a)
+
+Finally, post-processing is needed to clean ou final map. Using the Digital Elevation model 
+and some geometries for the Caribean and Pacific regions were used to produce the final map.
+See code [**4.Cleaning S1_S2_classification**](https://code.earthengine.google.com/64ce97bd8496f55a3d91d476a3965dfe)
+
+```{r my-fig2, out.width = "650px",fig.cap="Buenaventura classification", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/s1s2_gif.gif")
 ```
 

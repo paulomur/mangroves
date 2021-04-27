@@ -1,4 +1,4 @@
-# Mapping mangroves using Landsat archive
+# Mapping mangroves using Landsat
 
 For mapping historical mangroves change using Landsat our approach is a bit different than for S1+S2.
 
@@ -10,7 +10,7 @@ This Figure shows a simple way to linearly improve the original spectral data fr
 filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps  
 
 
-```{r my-fig2, out.width = "450px",fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
+```{r my-fig3, out.width = "450px",fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/LandTrendr.png")
 ```
 
@@ -29,7 +29,7 @@ This process mainly important for early years in 80 and 90's. Given that few ima
 Using the [**Remove bad imagery**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"} code in the repository you can identify which ones should not be included in the process.
 
 
-```{r my-fig3, out.width = "150%", fig.cap="Image with remaing clouds (left), original image (right)", echo=FALSE, message=FALSE}
+```{r my-fig4, out.width = "150%", fig.cap="Image with remaing clouds (left), original image (right)", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/bad.PNG")
 ```
 
@@ -45,8 +45,6 @@ var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box
                        .filter(ee.Filter.calendarRange(firstYear,lastYear,'year'))
                        .filterMetadata('system:index', 'not_contains', 'LT04_010059_19871113')}
 ```
-
-
 
 ### Input parameters (1)
 
@@ -94,7 +92,7 @@ However, if you want to change epochLen, you also have to consider changing the 
 
 In this cases our startYear = 1985, endYear=2020 and our epochLen =3
 
-```{r my-fig4, out.width = "30%", fig.cap="Epochs", echo=FALSE, message=FALSE}
+```{r my-fig5, out.width = "30%", fig.cap="Epochs", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/epochs.png")
 ```
 
@@ -132,16 +130,16 @@ percentil
 
 ### Exporting assets
 
-After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes after you can  export the data. You should see something like this:
+After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes after you are able export the data. You should see something like this:
 
-```{r my-fig5, out.width = "80%", fig.cap="Tasks", echo=FALSE, message=FALSE}
+```{r my-fig6, out.width = "80%", fig.cap="Tasks", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/tasks.PNG")
 ```
 
 
 ## Building 3-years composite maps
 
-
+Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process.
 
 
 
