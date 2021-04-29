@@ -98,27 +98,34 @@ knitr::include_graphics("images/epochs.png")
 
 ### Adding percentiles
 
-Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification of similar land cover classes. In the same code we add the Percentile 20, 80 and Standard Deviation.
+Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification. Using the same code we added the Percentile 20, 80 and Standard Deviation.
 Before running the code, you must create an ImageCollection in you Earth Engine account. This Collection will host all these additional information.
 
-You can just go to Assest Tab, New, Image Collection. Once you create it you can modify the assetId name:
+To create an ImageCollection: You can just go to Assest Tab, New, Image Collection. 
+
+```{r my-fig6, out.width = "30%", fig.cap="Create a ImageCollection", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/imagecol.PNG")
+```
+
+
+Once you create it you can modify the assetId name:
 
 ```{r eval=FALSE}
 percentil
-.aggregate_array('system:index')
-.evaluate(function (systemIndexes) {
-  systemIndexes.forEach(function (systemIndex, i) {
+.aggregate_array('composite_year')
+.evaluate(function (composite_year) {
+  composite_year.forEach(function (year, i) {
   // print(i) // This is your 0-based index
   var image = percentil
-      .filterMetadata('system:index', 'equals', systemIndex)
+      .filterMetadata('composite_year', 'equals', year)
       .first();
-    var oldIndex = msToFrac(image.get('system:time_start')).int16(); //get mills to year
-    image = image.set('composite_year', oldIndex).clip(featureCol);
+    //var oldIndex = msToFrac(image.get('system:time_start')).int16(); //get mills to year
+   // image = image.set('composite_year', oldIndex).clip(featureCol);
     //print (image)  
     Export.image.toAsset({
       image: image,
-      description: 'percentiles_' + i,
-      assetId: 'YourCollectionName/percentiles_' + i, 
+      description: 'percentiles_' + year,
+      assetId: 'YourCollectionName/percentiles_' + year, 
       crs: outProj,
       scale: 30,
       maxPixels: 1e13,
@@ -132,14 +139,18 @@ percentil
 
 After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes after you are able export the data. You should see something like this:
 
-```{r my-fig6, out.width = "80%", fig.cap="Tasks", echo=FALSE, message=FALSE}
+```{r my-fig7, out.width = "50%", fig.cap="Tasks", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/tasks.PNG")
 ```
 
 
 ## Building 3-years composite maps
 
-Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process.
+Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run th classification proces for each 3-year composite. 
+
+
+
+
 
 
 

@@ -72,7 +72,7 @@ var s2 = s2_sr_cld_col_eval.map(function(img){return man.add_cld_shdw_mask(img, 
 s2 =s2.map(function(img){return man.apply_cld_shdw_mask(img, params)});
 ```
 
-See the rest of the script on the repository [**1.Export_S1_S2_composite**](https://code.earthengine.google.com/b0f683d0e8d16299980d7336f6209640){target="_blank"}
+See the rest of the script on the repository **1.Export_S1_S2_composite**
 
 ## Organizing a basemap (get training data)
 
@@ -87,7 +87,7 @@ For this exercise, five classes were used:
 4. Non-forest   <20% tree canopy cover
 5. Other vegetation (shurb, herbaceous, wet forest)
 
-The code used [**2.Classification_S1_S2**](https://code.earthengine.google.com/41966d94c620cb879ce4c8f768f20005){target="_blank"}
+The code used **2.Classification_S1_S2** is located in the repository.
 
 This function add specific land cover types.
 
@@ -188,7 +188,7 @@ Export.image.toAsset({
 ## Accuracy and cleaning the final product
 
 A basic accuracy assessment using the testing points help us to understand how well the classification process performs.
-See code [**3.Accuracy_test_S1_S2**](https://code.earthengine.google.com/e56df0dfddb41c164f3fd755b9e1572a)
+See code **3.Accuracy_test_S1_S2**
 
 Finally, post-processing is needed to clean ou final map. Using the Digital Elevation model 
 and some geometries for the Caribean and Pacific regions were used to produce the final map.

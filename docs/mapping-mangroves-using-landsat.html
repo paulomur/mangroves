@@ -156,6 +156,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://mangrovescience.org/"</a></li>
+
 </ul>
 
       </nav>
@@ -255,24 +256,31 @@ Figure 3.3: Epochs
 </div>
 <div id="adding-percentiles" class="section level3" number="3.1.4">
 <h3><span class="header-section-number">3.1.4</span> Adding percentiles</h3>
-<p>Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification of similar land cover classes. In the same code we add the Percentile 20, 80 and Standard Deviation.
+<p>Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification. Using the same code we added the Percentile 20, 80 and Standard Deviation.
 Before running the code, you must create an ImageCollection in you Earth Engine account. This Collection will host all these additional information.</p>
-<p>You can just go to Assest Tab, New, Image Collection. Once you create it you can modify the assetId name:</p>
+<p>To create an ImageCollection: You can just go to Assest Tab, New, Image Collection.</p>
+<div class="figure"><span id="fig:my-fig6"></span>
+<img src="images/imagecol.PNG" alt="Create a ImageCollection" width="30%" />
+<p class="caption">
+Figure 3.4: Create a ImageCollection
+</p>
+</div>
+<p>Once you create it you can modify the assetId name:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="mapping-mangroves-using-landsat.html#cb15-1" aria-hidden="true" tabindex="-1"></a>percentil</span>
-<span id="cb15-2"><a href="mapping-mangroves-using-landsat.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.aggregate_array</span>(<span class="st">&#39;system:index&#39;</span>)</span>
-<span id="cb15-3"><a href="mapping-mangroves-using-landsat.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.evaluate</span>(<span class="cf">function</span> (systemIndexes) {</span>
-<span id="cb15-4"><a href="mapping-mangroves-using-landsat.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">systemIndexes.forEach</span>(<span class="cf">function</span> (systemIndex, i) {</span>
+<span id="cb15-2"><a href="mapping-mangroves-using-landsat.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.aggregate_array</span>(<span class="st">&#39;composite_year&#39;</span>)</span>
+<span id="cb15-3"><a href="mapping-mangroves-using-landsat.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.evaluate</span>(<span class="cf">function</span> (composite_year) {</span>
+<span id="cb15-4"><a href="mapping-mangroves-using-landsat.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite_year.forEach</span>(<span class="cf">function</span> (year, i) {</span>
 <span id="cb15-5"><a href="mapping-mangroves-using-landsat.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">/</span><span class="er">/</span> <span class="fu">print</span>(i) <span class="sc">/</span><span class="er">/</span> This is your <span class="dv">0</span><span class="sc">-</span>based index</span>
 <span id="cb15-6"><a href="mapping-mangroves-using-landsat.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  var image <span class="ot">=</span> percentil</span>
-<span id="cb15-7"><a href="mapping-mangroves-using-landsat.html#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.filterMetadata</span>(<span class="st">&#39;system:index&#39;</span>, <span class="st">&#39;equals&#39;</span>, systemIndex)</span>
+<span id="cb15-7"><a href="mapping-mangroves-using-landsat.html#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.filterMetadata</span>(<span class="st">&#39;composite_year&#39;</span>, <span class="st">&#39;equals&#39;</span>, year)</span>
 <span id="cb15-8"><a href="mapping-mangroves-using-landsat.html#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.first</span>();</span>
-<span id="cb15-9"><a href="mapping-mangroves-using-landsat.html#cb15-9" aria-hidden="true" tabindex="-1"></a>    var oldIndex <span class="ot">=</span> <span class="fu">msToFrac</span>(<span class="fu">image.get</span>(<span class="st">&#39;system:time_start&#39;</span>))<span class="fu">.int16</span>(); <span class="sc">/</span><span class="er">/</span>get mills to year</span>
-<span id="cb15-10"><a href="mapping-mangroves-using-landsat.html#cb15-10" aria-hidden="true" tabindex="-1"></a>    image <span class="ot">=</span> <span class="fu">image.set</span>(<span class="st">&#39;composite_year&#39;</span>, oldIndex)<span class="fu">.clip</span>(featureCol);</span>
+<span id="cb15-9"><a href="mapping-mangroves-using-landsat.html#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="sc">/</span><span class="er">/</span>var oldIndex <span class="ot">=</span> <span class="fu">msToFrac</span>(<span class="fu">image.get</span>(<span class="st">&#39;system:time_start&#39;</span>))<span class="fu">.int16</span>(); <span class="sc">/</span><span class="er">/</span>get mills to year</span>
+<span id="cb15-10"><a href="mapping-mangroves-using-landsat.html#cb15-10" aria-hidden="true" tabindex="-1"></a>   <span class="sc">/</span><span class="er">/</span> image <span class="ot">=</span> <span class="fu">image.set</span>(<span class="st">&#39;composite_year&#39;</span>, oldIndex)<span class="fu">.clip</span>(featureCol);</span>
 <span id="cb15-11"><a href="mapping-mangroves-using-landsat.html#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="sc">/</span><span class="er">/</span><span class="fu">print</span> (image)  </span>
 <span id="cb15-12"><a href="mapping-mangroves-using-landsat.html#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Export.image.toAsset</span>({</span>
 <span id="cb15-13"><a href="mapping-mangroves-using-landsat.html#cb15-13" aria-hidden="true" tabindex="-1"></a>      image<span class="sc">:</span> image,</span>
-<span id="cb15-14"><a href="mapping-mangroves-using-landsat.html#cb15-14" aria-hidden="true" tabindex="-1"></a>      description<span class="sc">:</span> <span class="st">&#39;percentiles_&#39;</span> <span class="sc">+</span> i,</span>
-<span id="cb15-15"><a href="mapping-mangroves-using-landsat.html#cb15-15" aria-hidden="true" tabindex="-1"></a>      assetId<span class="sc">:</span> <span class="st">&#39;YourCollectionName/percentiles_&#39;</span> <span class="sc">+</span> i, </span>
+<span id="cb15-14"><a href="mapping-mangroves-using-landsat.html#cb15-14" aria-hidden="true" tabindex="-1"></a>      description<span class="sc">:</span> <span class="st">&#39;percentiles_&#39;</span> <span class="sc">+</span> year,</span>
+<span id="cb15-15"><a href="mapping-mangroves-using-landsat.html#cb15-15" aria-hidden="true" tabindex="-1"></a>      assetId<span class="sc">:</span> <span class="st">&#39;YourCollectionName/percentiles_&#39;</span> <span class="sc">+</span> year, </span>
 <span id="cb15-16"><a href="mapping-mangroves-using-landsat.html#cb15-16" aria-hidden="true" tabindex="-1"></a>      crs<span class="sc">:</span> outProj,</span>
 <span id="cb15-17"><a href="mapping-mangroves-using-landsat.html#cb15-17" aria-hidden="true" tabindex="-1"></a>      scale<span class="sc">:</span> <span class="dv">30</span>,</span>
 <span id="cb15-18"><a href="mapping-mangroves-using-landsat.html#cb15-18" aria-hidden="true" tabindex="-1"></a>      maxPixels<span class="sc">:</span> <span class="fl">1e13</span>,</span>
@@ -284,17 +292,17 @@ Before running the code, you must create an ImageCollection in you Earth Engine 
 <div id="exporting-assets" class="section level3" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Exporting assets</h3>
 <p>After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes after you are able export the data. You should see something like this:</p>
-<div class="figure"><span id="fig:my-fig6"></span>
-<img src="images/tasks.PNG" alt="Tasks" width="80%" />
+<div class="figure"><span id="fig:my-fig7"></span>
+<img src="images/tasks.PNG" alt="Tasks" width="50%" />
 <p class="caption">
-Figure 3.4: Tasks
+Figure 3.5: Tasks
 </p>
 </div>
 </div>
 </div>
 <div id="building-3-years-composite-maps" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Building 3-years composite maps</h2>
-<p>Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process.</p>
+<p>Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run th classification proces for each 3-year composite.</p>
 
 </div>
 </div>
@@ -335,7 +343,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/paulomur/mangroves/edit/master/3Landsat.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/3Landsat.Rmd",
 "text": "Edit"
 },
 "history": {

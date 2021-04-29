@@ -156,6 +156,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://mangrovescience.org/"</a></li>
+
 </ul>
 
       </nav>
@@ -175,7 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="mapping-mangroves-using-sentinel12" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Mapping mangroves using Sentinel1&amp;2</h1>
-<p>We use Colombia as study region for this analysis. However, our analysis can be applied everywhere. The steps to map mangroves and other common land cover classes are:</p>
+<p>We use Colombia as study region for this analysis. However, our method can be applied everywhere. The steps to map mangroves and other common land cover classes are:</p>
 <ol style="list-style-type: decimal">
 <li>Pre-processing/Exporting Sentinel-1 and Sentinel-2</li>
 <li>Organizing a basemap (get training data!!!)</li>
@@ -222,7 +223,7 @@ Get all S2 images based on parameters.</p>
 <p>and to apply cloud masking and shadow masking</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="mapping-mangroves-using-sentinel12.html#cb4-1" aria-hidden="true" tabindex="-1"></a>var s2 <span class="ot">=</span> <span class="fu">s2_sr_cld_col_eval.map</span>(<span class="cf">function</span>(img){return <span class="fu">man.add_cld_shdw_mask</span>(img, params)});</span>
 <span id="cb4-2"><a href="mapping-mangroves-using-sentinel12.html#cb4-2" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">=</span><span class="fu">s2.map</span>(<span class="cf">function</span>(img){return <span class="fu">man.apply_cld_shdw_mask</span>(img, params)});</span></code></pre></div>
-<p>See the rest of the script on the repository <a href="https://code.earthengine.google.com/b0f683d0e8d16299980d7336f6209640" target="_blank"><strong>1.Export_S1_S2_composite</strong></a></p>
+<p>See the rest of the script on the repository <strong>1.Export_S1_S2_composite</strong></p>
 </div>
 <div id="organizing-a-basemap-get-training-data" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Organizing a basemap (get training data)</h2>
@@ -235,7 +236,7 @@ See official CLC documentation can be found <a href="http://documentacion.ideam.
 3. Dense Forest &gt;80% tree canopy cover
 4. Non-forest &lt;20% tree canopy cover
 5. Other vegetation (shurb, herbaceous, wet forest)</p>
-<p>The code used <a href="https://code.earthengine.google.com/41966d94c620cb879ce4c8f768f20005" target="_blank"><strong>2.Classification_S1_S2</strong></a></p>
+<p>The code used <strong>2.Classification_S1_S2</strong> is located in the repository.</p>
 <p>This function add specific land cover types.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="mapping-mangroves-using-sentinel12.html#cb5-1" aria-hidden="true" tabindex="-1"></a>var man <span class="ot">=</span> <span class="fu">require</span>(<span class="st">&#39;users/murillop/NASA_mangroves:mangroves&#39;</span>);</span>
 <span id="cb5-2"><a href="mapping-mangroves-using-sentinel12.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get Corine Land cover classes</span></span>
@@ -305,7 +306,7 @@ NBR, NDVI, NDMI, MNDWI, MVI, CMRI, GLCM (8 metrics). If you want to add your a d
 <div id="accuracy-and-cleaning-the-final-product" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Accuracy and cleaning the final product</h2>
 <p>A basic accuracy assessment using the testing points help us to understand how well the classification process performs.
-See code <a href="https://code.earthengine.google.com/e56df0dfddb41c164f3fd755b9e1572a"><strong>3.Accuracy_test_S1_S2</strong></a></p>
+See code <strong>3.Accuracy_test_S1_S2</strong></p>
 <p>Finally, post-processing is needed to clean ou final map. Using the Digital Elevation model
 and some geometries for the Caribean and Pacific regions were used to produce the final map.
 See code <a href="https://code.earthengine.google.com/64ce97bd8496f55a3d91d476a3965dfe"><strong>4.Cleaning S1_S2_classification</strong></a></p>
@@ -355,7 +356,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/paulomur/mangroves/edit/master/2sentinel.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/2sentinel.Rmd",
 "text": "Edit"
 },
 "history": {
