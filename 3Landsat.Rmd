@@ -26,7 +26,7 @@ In some cases even after removing masking out clouds, some images remain with th
 
 This process mainly important for early years in 80 and 90's. Given that few images are available, onyl one with problems can affect our final composite product.
 
-Using the [**Remove bad imagery**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"} code in the repository you can identify which ones should not be included in the process.
+Using the **5.Remove bad imagery Landsat** code in the repository you can identify which ones should not be included in the process.
 
 
 ```{r my-fig4, out.width = "150%", fig.cap="Image with remaing clouds (left), original image (right)", echo=FALSE, message=FALSE}
@@ -34,7 +34,7 @@ knitr::include_graphics("images/bad.PNG")
 ```
 
 After you pick those images that cannot be part of the process, you can exclude using ' not_contains' from the 
-code [**Export_Landsat**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"}
+code **6. Get_Fiited_data_and_Percentiles_Landsat**
 
 ```{r eval=FALSE}
 var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box) {
@@ -51,7 +51,7 @@ var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box
 Common parameters in LandTrendr includes the name of the task, region, years and others.
 In this example we use NBR as main index for segmentation and the new fitted bands will be the spectral bands 
 from Landsat. Our outputs fitted data could be also other indices not necessarily the spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The code that includes all next steps is
-[**Export_Landsat**](https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e){target="_blank"}
+**6. Get_Fiited_data_and_Percentiles_Landsat**
 
 ```{r eval=FALSE}
 var featureValues = ['Man']; // Name  it is useful if you want to export many different regions
@@ -115,17 +115,15 @@ percentil
 .aggregate_array('composite_year')
 .evaluate(function (composite_year) {
   composite_year.forEach(function (year, i) {
-  // print(i) // This is your 0-based index
+
   var image = percentil
       .filterMetadata('composite_year', 'equals', year)
       .first();
-    //var oldIndex = msToFrac(image.get('system:time_start')).int16(); //get mills to year
-   // image = image.set('composite_year', oldIndex).clip(featureCol);
-    //print (image)  
+
     Export.image.toAsset({
       image: image,
       description: 'percentiles_' + year,
-      assetId: 'YourCollectionName/percentiles_' + year, 
+      assetId: 'SilviaCarbon_COL/Landsat_Predictors/Cienaga_Percentiles/percentiles_' + year, 
       crs: outProj,
       scale: 30,
       maxPixels: 1e13,
@@ -143,14 +141,209 @@ After you remove bad images and change parameters you can export the fitted imag
 knitr::include_graphics("images/tasks.PNG")
 ```
 
+Note: It is also possible to see <span style="color:red;"> RangeError: Maximum call stack size exceeded </span>.
+Just click the Run button 2 or 3 times quickly. 
 
 ## Building 3-years composite maps
 
-Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run th classification proces for each 3-year composite. 
+Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process for each 3-year composite. Open the code: **7.Classification_Landsat_TimeSeries**
+
+```{r eval=FALSE}
+var ftv_values  =  ee.Image("projects/mangrovescience/SilviaCarbon_COL/Landsat_Predictors/Cienaga-NBR-7-19852020-01011231EPOCHS3");
+var percentiles = ee.FeatureCollection("projects/mangrovescience/SilviaCarbon_COL/Landsat_Predictors/Cienaga_Percentiles");
+var mangroves_SNIC = ee.Image("projects/mangrovescience/SilviaCarbon_COL/S1S2_2019_2020/S1S2_class_SNIC_R1_cleaned");
+
+//#Reading our FTV composites 
+var lista = ["1987", "1990", "1993", "1996", "1999",
+"2002", "2005", "2008", "2011", "2014","2017","2020"];
+
+var predictors = ee.ImageCollection([]);
+ 
+for (var i = 0; i< lista.length; i++){
+  var year = lista[i];
+  var ftv = ftv_values.select('b1_ftv_'+(year), 'b2_ftv_'+(year),
+          'b3_ftv_'+(year),'b4_ftv_'+(year),'b5_ftv_'+(year),
+          'b7_ftv_'+(year)).rename('B1', 'B2','B3', 'B4', 'B5', 'B7')
+         .set('composite_year', ee.Number.parse(year));            
+predictors= predictors.merge(ee.ImageCollection([ftv]))}
+
+var filter = ee.Filter.equals({
+  leftField: 'composite_year',
+  rightField: 'composite_year'
+});
+
+//# Create the join.
+var simpleJoin = ee.Join.inner();
+
+//# Inner join
+var innerJoin = ee.ImageCollection(simpleJoin.apply(predictors, percentiles, filter));
+
+var collection_final = innerJoin.map(function(feature) {
+  return ee.Image.cat(feature.get('primary'), feature.get('secondary'));
+});
+
+print('collection_final', collection_final);
+```
+
+Now we can calculate different vegetation indices, add other ancillary information
+and also import the basemap from which we want to collect the spectral data. The basemap that we are going to use is the map we created using S1+S2 which is a good representation of different classes for the period 2019-2020.
+
+We distributed 200 per each class. See example of the distribution:
+
+```{r my-fig8, out.width = "450px",fig.cap="Sampled points over Landsat composite 2017-2020", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/cienaga.PNG")
+```
+
+
+```{r eval=FALSE}
+mangroves_SNIC = mangroves_SNIC.clip(collection_final.first().geometry()).rename('lc');
+Map.addLayer(mangroves_SNIC, {min:1, max:5, palette: ["red","green","yellow","blue", "Chartreuse"]}, 'Basemap 2019-2020');
+
+//Calculate all indices and GLCM predictors
+var spectral_predictors = mangroves.doIndices2_land(collection_final);
+
+//Add ancillary data
+spectral_predictors = spectral_predictors.map(function(img){
+  return img.addBands(base_predictors).updateMask(mangroves_SNIC.gt(0))});
+
+//Select Landsat data in 2017-2020
+var y2017_2020_pixel = spectral_predictors.filterMetadata('composite_year', "equals", 2020).first();
+Map.addLayer(y2017_2020_pixel, {min:100, max:4000, bands:['B4','B5','B3']}, 'Spectral Landsat 2017-2020');
+
+
+//Get training data//
+var stratified = mangroves_SNIC.addBands(ee.Image.pixelLonLat())
+    .stratifiedSample({
+      numPoints: 1,
+      classBand: 'lc',
+      scale: 30,
+      region: mangroves_SNIC.geometry(),
+      classValues:[1,2,3,4,5], //  1=manglar // 2 = forest // 3= pastos  //4 water //5 Other vegetation
+      classPoints: [200, 200, 200, 200, 200],  
+    }).map(function(f) {
+      return f.setGeometry(ee.Geometry.Point([f.get('longitude'), f.get('latitude')]));
+    });
+//print ('Points per class', stratified.reduceColumns(ee.Reducer.frequencyHistogram(),['classification']));
+print ('Strat', stratified.limit(10))   
+
+var new_bands = ['B2','B3', 'B4','B5', 'B7', 
+                 'B3_p20', 'B4_p20','B5_p20', 'B7_p20', 
+                 'B3_p80', 'B4_p80','B5_p80', 'B7_p80', 
+                 'B3_stdDev', 'B4_stdDev','B5_stdDev', 'B7_stdDev', 
+                 'NDMI','NDFI', 'TCW', 'TCG', 'TCA', 'SHADE_NDFI', 'GV_NDFI', 'SOIL_NDFI', 'NPV_NDFI',
+                 'NDVI', 'MNDWI', 'MVI', 'CMRI', 'NBR',
+                 'GRAY_savg', 'GRAY_var', 'GRAY_ent', 'GRAY_contrast',
+                 'ELEVATION', 'DEM_SLOPE' , 'ASPECT',  'TEMPERATURE', 'NIGHT_LIGHTS', 'POPULATION'];
+                 
+```  
+
+We use Image Segmentation SNIC algorithm for classification. For building the clusters we use MVI, it is performs well
+for delineating mangroves extent. 
+
+```{r eval=FALSE}
+//Use MVI for clustering  and spectralmap in 2020             
+var snic = mangroves.snic_mangroves_col(spectral_predictors.select(new_bands), 'MVI');
+var y2017_2020_snic = snic.filterMetadata('composite_year', "equals", 2020).first();
+var predictionBands=y2017_2020_snic.bandNames().remove('clusters');
+print (predictionBands, 'predictionBands');
+snic = snic.select(predictionBands);
+
+var sampleAll = y2017_2020_snic.sampleRegions({
+  collection: stratified, 
+  properties: ['lc'],
+  scale: 30,
+  tileScale:2,
+  geometries: true,
+}).randomColumn();
+
+//print('Full sample size',sampleAll.size());
+sampleAll = sampleAll.randomColumn({seed: 10}); 
+var split = 0.7;  // Roughly 70% training, 30% testing
+//create the training set
+var trainingPts = sampleAll.filter(ee.Filter.lt('random', split));//print('trainingPoints',trainingPts);
+//Export.table.toAsset(trainingPts, 'train', 'SilviaCarbon_COL/features/train_Landsat' )
+//create the test set
+var testingPts = sampleAll.filter(ee.Filter.gte('random', split));//print('testingPoints',testingPts);
+//Export.table.toAsset(testingPts, 'test', 'SilviaCarbon_COL/features/test_Landsat' )
+
+
+//After exporting and clean the points you can call them:
+//var train = ee.FeatureCollection('projects/mangrovescience/SilviaCarbon_COL/features/train_Landsat');                            
+//Otherwise just sample using random procedure!
+
+var paleta= ee.List(["ffffff", "FF0000","00ff00 ", "FFA500", "0000FF", "32CD32",]); // includes one color at the beggining  because class starts in 1 NOT in ZERO
+
+var features = trainingPts.map(function(f) {
+  var klass = f.get("lc");
+  return f.set({style: {color: paleta.get(klass) }});
+});
+Map.addLayer(features.style({styleProperty: "style"}),{}, 'Training Points', true);
+```
+
+We also use 90 trees after tunning the numberofTrees. It seems 90 provides a more stable accuracy. 
+
+```{r my-fig9, out.width = "450px",fig.cap="Accuracy and amount of trees", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/hypertunning.PNG")
+```
 
 
 
+```{r eval=FALSE}
+///Build the RF classifer:
+var classifier_snic = ee.Classifier.smileRandomForest(90).setOutputMode('CLASSIFICATION')  
+//90 seems a good number of trees and Tunning plot
+  .train({
+  features:trainingPts, 
+  classProperty:'lc', 
+  inputProperties: predictionBands
+});
+
+// Run .explain() to see what the classifer looks like
+print(classifier_snic.explain())
 
 
+var test = y2017_2020_snic.sampleRegions({
+  collection: testingPts,
+  properties: ['lc'],
+  scale: 30,
+  tileScale: 2
+});
 
+// Tune the numberOfTrees parameter.
+var numTreesList = ee.List.sequence(10, 150, 5);
+
+var accuracies = numTreesList.map(function(numTrees) {
+  var classifier = ee.Classifier.smileRandomForest(numTrees)
+      .train({
+        features: trainingPts,
+        classProperty: 'lc',
+        inputProperties: predictionBands
+      });
+
+  // Here we are classifying a table instead of an image
+  // Classifiers work on both images and tables
+  return test
+    .classify(classifier)
+    .errorMatrix('lc', 'classification')
+    .accuracy();
+});
+
+var chart = ui.Chart.array.values({
+  array: ee.Array(accuracies),
+  axis: 0,
+  xLabels: numTreesList
+  }).setOptions({
+      title: 'Hyperparameter Tuning for the numberOfTrees Parameters',
+      vAxis: {title: 'Validation Accuracy'},
+      hAxis: {title: 'Number of Tress', gridlines: {count: 15}}
+  });
+print(chart);
+
+//Full SNIC across whole collection (all years)
+var classifiedCollection = snic
+  .map(function(image) { 
+    return image.classify(classifier_snic).copyProperties(image);
+  });
+print (classifiedCollection, 'classifiedCollection');
+```
 

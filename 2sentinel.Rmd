@@ -192,7 +192,7 @@ See code **3.Accuracy_test_S1_S2**
 
 Finally, post-processing is needed to clean ou final map. Using the Digital Elevation model 
 and some geometries for the Caribean and Pacific regions were used to produce the final map.
-See code [**4.Cleaning S1_S2_classification**](https://code.earthengine.google.com/64ce97bd8496f55a3d91d476a3965dfe)
+See code **4.Cleaning S1_S2_classification**
 
 ```{r my-fig2, out.width = "650px",fig.cap="Buenaventura classification", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/s1s2_gif.gif")

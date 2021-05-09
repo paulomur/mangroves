@@ -195,7 +195,7 @@ In tropical areas clouds and lack of Landsat observations affect tracking evolut
 <h3><span class="header-section-number">3.1.1</span> Remove bad imagery</h3>
 <p>In some cases even after removing masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.</p>
 <p>This process mainly important for early years in 80 and 90’s. Given that few images are available, onyl one with problems can affect our final composite product.</p>
-<p>Using the <a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e" target="_blank"><strong>Remove bad imagery</strong></a> code in the repository you can identify which ones should not be included in the process.</p>
+<p>Using the <strong>5.Remove bad imagery Landsat</strong> code in the repository you can identify which ones should not be included in the process.</p>
 <div class="figure"><span id="fig:my-fig4"></span>
 <img src="images/bad.PNG" alt="Image with remaing clouds (left), original image (right)" width="150%" />
 <p class="caption">
@@ -203,7 +203,7 @@ Figure 3.2: Image with remaing clouds (left), original image (right)
 </p>
 </div>
 <p>After you pick those images that cannot be part of the process, you can exclude using ’ not_contains’ from the
-code <a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e" target="_blank"><strong>Export_Landsat</strong></a></p>
+code <strong>6. Get_Fiited_data_and_Percentiles_Landsat</strong></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mapping-mangroves-using-landsat.html#cb12-1" aria-hidden="true" tabindex="-1"></a>var getSRcollection <span class="ot">=</span> <span class="cf">function</span>(firstYear,lastYear, startDay, endDay, sensor, box) {</span>
 <span id="cb12-2"><a href="mapping-mangroves-using-landsat.html#cb12-2" aria-hidden="true" tabindex="-1"></a>  var srCollection <span class="ot">=</span> <span class="fu">ee.ImageCollection</span>(<span class="st">&#39;LANDSAT/&#39;</span><span class="sc">+</span> sensor <span class="sc">+</span> <span class="st">&#39;/C01/T1_SR&#39;</span>) <span class="sc">/</span><span class="er">/</span><span class="co"># get surface reflectance images</span></span>
 <span id="cb12-3"><a href="mapping-mangroves-using-landsat.html#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">.filterBounds</span>(box) <span class="sc">/</span><span class="er">/</span><span class="co"># filter them by a bounding box</span></span>
@@ -217,7 +217,7 @@ code <a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc
 <p>Common parameters in LandTrendr includes the name of the task, region, years and others.
 In this example we use NBR as main index for segmentation and the new fitted bands will be the spectral bands
 from Landsat. Our outputs fitted data could be also other indices not necessarily the spectral bands. We use “Medoid” to create the composites but we can also used a targetDay. The code that includes all next steps is
-<a href="https://code.earthengine.google.com/43d416db058f4ba9acecb4c48416cc9e" target="_blank"><strong>Export_Landsat</strong></a></p>
+<strong>6. Get_Fiited_data_and_Percentiles_Landsat</strong></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="mapping-mangroves-using-landsat.html#cb13-1" aria-hidden="true" tabindex="-1"></a>var featureValues <span class="ot">=</span> [<span class="st">&#39;Man&#39;</span>]; <span class="sc">/</span><span class="er">/</span> Name  it is useful <span class="cf">if</span> you want to export many different regions</span>
 <span id="cb13-2"><a href="mapping-mangroves-using-landsat.html#cb13-2" aria-hidden="true" tabindex="-1"></a>var featureCol <span class="ot">=</span> geometry;   <span class="sc">/</span><span class="er">/</span> Region to be exported</span>
 <span id="cb13-3"><a href="mapping-mangroves-using-landsat.html#cb13-3" aria-hidden="true" tabindex="-1"></a>var featureKey <span class="ot">=</span> <span class="st">&#39;Col&#39;</span>;      <span class="sc">/</span><span class="er">/</span> Name <span class="dv">2</span> <span class="sc">/</span><span class="er">/</span> it is useful <span class="cf">if</span> you want to export many different regions</span>
@@ -270,24 +270,22 @@ Figure 3.4: Create a ImageCollection
 <span id="cb15-2"><a href="mapping-mangroves-using-landsat.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.aggregate_array</span>(<span class="st">&#39;composite_year&#39;</span>)</span>
 <span id="cb15-3"><a href="mapping-mangroves-using-landsat.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.evaluate</span>(<span class="cf">function</span> (composite_year) {</span>
 <span id="cb15-4"><a href="mapping-mangroves-using-landsat.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite_year.forEach</span>(<span class="cf">function</span> (year, i) {</span>
-<span id="cb15-5"><a href="mapping-mangroves-using-landsat.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">/</span><span class="er">/</span> <span class="fu">print</span>(i) <span class="sc">/</span><span class="er">/</span> This is your <span class="dv">0</span><span class="sc">-</span>based index</span>
+<span id="cb15-5"><a href="mapping-mangroves-using-landsat.html#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-6"><a href="mapping-mangroves-using-landsat.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  var image <span class="ot">=</span> percentil</span>
 <span id="cb15-7"><a href="mapping-mangroves-using-landsat.html#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.filterMetadata</span>(<span class="st">&#39;composite_year&#39;</span>, <span class="st">&#39;equals&#39;</span>, year)</span>
 <span id="cb15-8"><a href="mapping-mangroves-using-landsat.html#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.first</span>();</span>
-<span id="cb15-9"><a href="mapping-mangroves-using-landsat.html#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="sc">/</span><span class="er">/</span>var oldIndex <span class="ot">=</span> <span class="fu">msToFrac</span>(<span class="fu">image.get</span>(<span class="st">&#39;system:time_start&#39;</span>))<span class="fu">.int16</span>(); <span class="sc">/</span><span class="er">/</span>get mills to year</span>
-<span id="cb15-10"><a href="mapping-mangroves-using-landsat.html#cb15-10" aria-hidden="true" tabindex="-1"></a>   <span class="sc">/</span><span class="er">/</span> image <span class="ot">=</span> <span class="fu">image.set</span>(<span class="st">&#39;composite_year&#39;</span>, oldIndex)<span class="fu">.clip</span>(featureCol);</span>
-<span id="cb15-11"><a href="mapping-mangroves-using-landsat.html#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="sc">/</span><span class="er">/</span><span class="fu">print</span> (image)  </span>
-<span id="cb15-12"><a href="mapping-mangroves-using-landsat.html#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Export.image.toAsset</span>({</span>
-<span id="cb15-13"><a href="mapping-mangroves-using-landsat.html#cb15-13" aria-hidden="true" tabindex="-1"></a>      image<span class="sc">:</span> image,</span>
-<span id="cb15-14"><a href="mapping-mangroves-using-landsat.html#cb15-14" aria-hidden="true" tabindex="-1"></a>      description<span class="sc">:</span> <span class="st">&#39;percentiles_&#39;</span> <span class="sc">+</span> year,</span>
-<span id="cb15-15"><a href="mapping-mangroves-using-landsat.html#cb15-15" aria-hidden="true" tabindex="-1"></a>      assetId<span class="sc">:</span> <span class="st">&#39;YourCollectionName/percentiles_&#39;</span> <span class="sc">+</span> year, </span>
-<span id="cb15-16"><a href="mapping-mangroves-using-landsat.html#cb15-16" aria-hidden="true" tabindex="-1"></a>      crs<span class="sc">:</span> outProj,</span>
-<span id="cb15-17"><a href="mapping-mangroves-using-landsat.html#cb15-17" aria-hidden="true" tabindex="-1"></a>      scale<span class="sc">:</span> <span class="dv">30</span>,</span>
-<span id="cb15-18"><a href="mapping-mangroves-using-landsat.html#cb15-18" aria-hidden="true" tabindex="-1"></a>      maxPixels<span class="sc">:</span> <span class="fl">1e13</span>,</span>
-<span id="cb15-19"><a href="mapping-mangroves-using-landsat.html#cb15-19" aria-hidden="true" tabindex="-1"></a>      region<span class="sc">:</span> featureCol,</span>
-<span id="cb15-20"><a href="mapping-mangroves-using-landsat.html#cb15-20" aria-hidden="true" tabindex="-1"></a>    });      </span>
-<span id="cb15-21"><a href="mapping-mangroves-using-landsat.html#cb15-21" aria-hidden="true" tabindex="-1"></a>  });</span>
-<span id="cb15-22"><a href="mapping-mangroves-using-landsat.html#cb15-22" aria-hidden="true" tabindex="-1"></a>});</span></code></pre></div>
+<span id="cb15-9"><a href="mapping-mangroves-using-landsat.html#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="mapping-mangroves-using-landsat.html#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Export.image.toAsset</span>({</span>
+<span id="cb15-11"><a href="mapping-mangroves-using-landsat.html#cb15-11" aria-hidden="true" tabindex="-1"></a>      image<span class="sc">:</span> image,</span>
+<span id="cb15-12"><a href="mapping-mangroves-using-landsat.html#cb15-12" aria-hidden="true" tabindex="-1"></a>      description<span class="sc">:</span> <span class="st">&#39;percentiles_&#39;</span> <span class="sc">+</span> year,</span>
+<span id="cb15-13"><a href="mapping-mangroves-using-landsat.html#cb15-13" aria-hidden="true" tabindex="-1"></a>      assetId<span class="sc">:</span> <span class="st">&#39;SilviaCarbon_COL/Landsat_Predictors/Cienaga_Percentiles/percentiles_&#39;</span> <span class="sc">+</span> year, </span>
+<span id="cb15-14"><a href="mapping-mangroves-using-landsat.html#cb15-14" aria-hidden="true" tabindex="-1"></a>      crs<span class="sc">:</span> outProj,</span>
+<span id="cb15-15"><a href="mapping-mangroves-using-landsat.html#cb15-15" aria-hidden="true" tabindex="-1"></a>      scale<span class="sc">:</span> <span class="dv">30</span>,</span>
+<span id="cb15-16"><a href="mapping-mangroves-using-landsat.html#cb15-16" aria-hidden="true" tabindex="-1"></a>      maxPixels<span class="sc">:</span> <span class="fl">1e13</span>,</span>
+<span id="cb15-17"><a href="mapping-mangroves-using-landsat.html#cb15-17" aria-hidden="true" tabindex="-1"></a>      region<span class="sc">:</span> featureCol,</span>
+<span id="cb15-18"><a href="mapping-mangroves-using-landsat.html#cb15-18" aria-hidden="true" tabindex="-1"></a>    });      </span>
+<span id="cb15-19"><a href="mapping-mangroves-using-landsat.html#cb15-19" aria-hidden="true" tabindex="-1"></a>  });</span>
+<span id="cb15-20"><a href="mapping-mangroves-using-landsat.html#cb15-20" aria-hidden="true" tabindex="-1"></a>});</span></code></pre></div>
 </div>
 <div id="exporting-assets" class="section level3" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Exporting assets</h3>
@@ -298,11 +296,196 @@ Figure 3.4: Create a ImageCollection
 Figure 3.5: Tasks
 </p>
 </div>
+<p>Note: It is also possible to see <span style="color:red;"> RangeError: Maximum call stack size exceeded </span>.
+Just click the Run button 2 or 3 times quickly.</p>
 </div>
 </div>
 <div id="building-3-years-composite-maps" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Building 3-years composite maps</h2>
-<p>Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run th classification proces for each 3-year composite.</p>
+<p>Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process for each 3-year composite. Open the code: <strong>7.Classification_Landsat_TimeSeries</strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="mapping-mangroves-using-landsat.html#cb16-1" aria-hidden="true" tabindex="-1"></a>var ftv_values  <span class="ot">=</span>  <span class="fu">ee.Image</span>(<span class="st">&quot;projects/mangrovescience/SilviaCarbon_COL/Landsat_Predictors/Cienaga-NBR-7-19852020-01011231EPOCHS3&quot;</span>);</span>
+<span id="cb16-2"><a href="mapping-mangroves-using-landsat.html#cb16-2" aria-hidden="true" tabindex="-1"></a>var percentiles <span class="ot">=</span> <span class="fu">ee.FeatureCollection</span>(<span class="st">&quot;projects/mangrovescience/SilviaCarbon_COL/Landsat_Predictors/Cienaga_Percentiles&quot;</span>);</span>
+<span id="cb16-3"><a href="mapping-mangroves-using-landsat.html#cb16-3" aria-hidden="true" tabindex="-1"></a>var mangroves_SNIC <span class="ot">=</span> <span class="fu">ee.Image</span>(<span class="st">&quot;projects/mangrovescience/SilviaCarbon_COL/S1S2_2019_2020/S1S2_class_SNIC_R1_cleaned&quot;</span>);</span>
+<span id="cb16-4"><a href="mapping-mangroves-using-landsat.html#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="mapping-mangroves-using-landsat.html#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="co">#Reading our FTV composites </span></span>
+<span id="cb16-6"><a href="mapping-mangroves-using-landsat.html#cb16-6" aria-hidden="true" tabindex="-1"></a>var lista <span class="ot">=</span> [<span class="st">&quot;1987&quot;</span>, <span class="st">&quot;1990&quot;</span>, <span class="st">&quot;1993&quot;</span>, <span class="st">&quot;1996&quot;</span>, <span class="st">&quot;1999&quot;</span>,</span>
+<span id="cb16-7"><a href="mapping-mangroves-using-landsat.html#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;2002&quot;</span>, <span class="st">&quot;2005&quot;</span>, <span class="st">&quot;2008&quot;</span>, <span class="st">&quot;2011&quot;</span>, <span class="st">&quot;2014&quot;</span>,<span class="st">&quot;2017&quot;</span>,<span class="st">&quot;2020&quot;</span>];</span>
+<span id="cb16-8"><a href="mapping-mangroves-using-landsat.html#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="mapping-mangroves-using-landsat.html#cb16-9" aria-hidden="true" tabindex="-1"></a>var predictors <span class="ot">=</span> <span class="fu">ee.ImageCollection</span>([]);</span>
+<span id="cb16-10"><a href="mapping-mangroves-using-landsat.html#cb16-10" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb16-11"><a href="mapping-mangroves-using-landsat.html#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (var <span class="at">i =</span> <span class="dv">0</span>; i<span class="sc">&lt;</span> lista.length; i<span class="sc">++</span>){</span>
+<span id="cb16-12"><a href="mapping-mangroves-using-landsat.html#cb16-12" aria-hidden="true" tabindex="-1"></a>  var year <span class="ot">=</span> lista[i];</span>
+<span id="cb16-13"><a href="mapping-mangroves-using-landsat.html#cb16-13" aria-hidden="true" tabindex="-1"></a>  var ftv <span class="ot">=</span> <span class="fu">ftv_values.select</span>(<span class="st">&#39;b1_ftv_&#39;</span><span class="sc">+</span>(year), <span class="st">&#39;b2_ftv_&#39;</span><span class="sc">+</span>(year),</span>
+<span id="cb16-14"><a href="mapping-mangroves-using-landsat.html#cb16-14" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;b3_ftv_&#39;</span><span class="sc">+</span>(year),<span class="st">&#39;b4_ftv_&#39;</span><span class="sc">+</span>(year),<span class="st">&#39;b5_ftv_&#39;</span><span class="sc">+</span>(year),</span>
+<span id="cb16-15"><a href="mapping-mangroves-using-landsat.html#cb16-15" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;b7_ftv_&#39;</span><span class="sc">+</span>(year))<span class="fu">.rename</span>(<span class="st">&#39;B1&#39;</span>, <span class="st">&#39;B2&#39;</span>,<span class="st">&#39;B3&#39;</span>, <span class="st">&#39;B4&#39;</span>, <span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B7&#39;</span>)</span>
+<span id="cb16-16"><a href="mapping-mangroves-using-landsat.html#cb16-16" aria-hidden="true" tabindex="-1"></a>         <span class="fu">.set</span>(<span class="st">&#39;composite_year&#39;</span>, <span class="fu">ee.Number.parse</span>(year));            </span>
+<span id="cb16-17"><a href="mapping-mangroves-using-landsat.html#cb16-17" aria-hidden="true" tabindex="-1"></a>predictors<span class="ot">=</span> <span class="fu">predictors.merge</span>(<span class="fu">ee.ImageCollection</span>([ftv]))}</span>
+<span id="cb16-18"><a href="mapping-mangroves-using-landsat.html#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="mapping-mangroves-using-landsat.html#cb16-19" aria-hidden="true" tabindex="-1"></a>var filter <span class="ot">=</span> <span class="fu">ee.Filter.equals</span>({</span>
+<span id="cb16-20"><a href="mapping-mangroves-using-landsat.html#cb16-20" aria-hidden="true" tabindex="-1"></a>  leftField<span class="sc">:</span> <span class="st">&#39;composite_year&#39;</span>,</span>
+<span id="cb16-21"><a href="mapping-mangroves-using-landsat.html#cb16-21" aria-hidden="true" tabindex="-1"></a>  rightField<span class="sc">:</span> <span class="st">&#39;composite_year&#39;</span></span>
+<span id="cb16-22"><a href="mapping-mangroves-using-landsat.html#cb16-22" aria-hidden="true" tabindex="-1"></a>});</span>
+<span id="cb16-23"><a href="mapping-mangroves-using-landsat.html#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="mapping-mangroves-using-landsat.html#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="co"># Create the join.</span></span>
+<span id="cb16-25"><a href="mapping-mangroves-using-landsat.html#cb16-25" aria-hidden="true" tabindex="-1"></a>var simpleJoin <span class="ot">=</span> <span class="fu">ee.Join.inner</span>();</span>
+<span id="cb16-26"><a href="mapping-mangroves-using-landsat.html#cb16-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-27"><a href="mapping-mangroves-using-landsat.html#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="co"># Inner join</span></span>
+<span id="cb16-28"><a href="mapping-mangroves-using-landsat.html#cb16-28" aria-hidden="true" tabindex="-1"></a>var innerJoin <span class="ot">=</span> <span class="fu">ee.ImageCollection</span>(<span class="fu">simpleJoin.apply</span>(predictors, percentiles, filter));</span>
+<span id="cb16-29"><a href="mapping-mangroves-using-landsat.html#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-30"><a href="mapping-mangroves-using-landsat.html#cb16-30" aria-hidden="true" tabindex="-1"></a>var collection_final <span class="ot">=</span> <span class="fu">innerJoin.map</span>(<span class="cf">function</span>(feature) {</span>
+<span id="cb16-31"><a href="mapping-mangroves-using-landsat.html#cb16-31" aria-hidden="true" tabindex="-1"></a>  return <span class="fu">ee.Image.cat</span>(<span class="fu">feature.get</span>(<span class="st">&#39;primary&#39;</span>), <span class="fu">feature.get</span>(<span class="st">&#39;secondary&#39;</span>));</span>
+<span id="cb16-32"><a href="mapping-mangroves-using-landsat.html#cb16-32" aria-hidden="true" tabindex="-1"></a>});</span>
+<span id="cb16-33"><a href="mapping-mangroves-using-landsat.html#cb16-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-34"><a href="mapping-mangroves-using-landsat.html#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;collection_final&#39;</span>, collection_final);</span></code></pre></div>
+<p>Now we can calculate different vegetation indices, add other ancillary information
+and also import the basemap from which we want to collect the spectral data. The basemap that we are going to use is the map we created using S1+S2 which is a good representation of different classes for the period 2019-2020.</p>
+<p>We distributed 200 per each class. See example of the distribution:</p>
+<div class="figure"><span id="fig:my-fig8"></span>
+<img src="images/cienaga.PNG" alt="Sampled points over Landsat composite 2017-2020" width="450px" />
+<p class="caption">
+Figure 3.6: Sampled points over Landsat composite 2017-2020
+</p>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="mapping-mangroves-using-landsat.html#cb17-1" aria-hidden="true" tabindex="-1"></a>mangroves_SNIC <span class="ot">=</span> <span class="fu">mangroves_SNIC.clip</span>(<span class="fu">collection_final.first</span>()<span class="fu">.geometry</span>())<span class="fu">.rename</span>(<span class="st">&#39;lc&#39;</span>);</span>
+<span id="cb17-2"><a href="mapping-mangroves-using-landsat.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Map.addLayer</span>(mangroves_SNIC, {min<span class="sc">:</span><span class="dv">1</span>, max<span class="sc">:</span><span class="dv">5</span>, palette<span class="sc">:</span> [<span class="st">&quot;red&quot;</span>,<span class="st">&quot;green&quot;</span>,<span class="st">&quot;yellow&quot;</span>,<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;Chartreuse&quot;</span>]}, <span class="st">&#39;Basemap 2019-2020&#39;</span>);</span>
+<span id="cb17-3"><a href="mapping-mangroves-using-landsat.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="mapping-mangroves-using-landsat.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Calculate all indices and GLCM predictors</span>
+<span id="cb17-5"><a href="mapping-mangroves-using-landsat.html#cb17-5" aria-hidden="true" tabindex="-1"></a>var spectral_predictors <span class="ot">=</span> <span class="fu">mangroves.doIndices2_land</span>(collection_final);</span>
+<span id="cb17-6"><a href="mapping-mangroves-using-landsat.html#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="mapping-mangroves-using-landsat.html#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Add ancillary data</span>
+<span id="cb17-8"><a href="mapping-mangroves-using-landsat.html#cb17-8" aria-hidden="true" tabindex="-1"></a>spectral_predictors <span class="ot">=</span> <span class="fu">spectral_predictors.map</span>(<span class="cf">function</span>(img){</span>
+<span id="cb17-9"><a href="mapping-mangroves-using-landsat.html#cb17-9" aria-hidden="true" tabindex="-1"></a>  return <span class="fu">img.addBands</span>(base_predictors)<span class="fu">.updateMask</span>(<span class="fu">mangroves_SNIC.gt</span>(<span class="dv">0</span>))});</span>
+<span id="cb17-10"><a href="mapping-mangroves-using-landsat.html#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="mapping-mangroves-using-landsat.html#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Select Landsat data <span class="cf">in</span> <span class="dv">2017-2020</span></span>
+<span id="cb17-12"><a href="mapping-mangroves-using-landsat.html#cb17-12" aria-hidden="true" tabindex="-1"></a>var y2017_2020_pixel <span class="ot">=</span> <span class="fu">spectral_predictors.filterMetadata</span>(<span class="st">&#39;composite_year&#39;</span>, <span class="st">&quot;equals&quot;</span>, <span class="dv">2020</span>)<span class="fu">.first</span>();</span>
+<span id="cb17-13"><a href="mapping-mangroves-using-landsat.html#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">Map.addLayer</span>(y2017_2020_pixel, {min<span class="sc">:</span><span class="dv">100</span>, max<span class="sc">:</span><span class="dv">4000</span>, bands<span class="sc">:</span>[<span class="st">&#39;B4&#39;</span>,<span class="st">&#39;B5&#39;</span>,<span class="st">&#39;B3&#39;</span>]}, <span class="st">&#39;Spectral Landsat 2017-2020&#39;</span>);</span>
+<span id="cb17-14"><a href="mapping-mangroves-using-landsat.html#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="mapping-mangroves-using-landsat.html#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="mapping-mangroves-using-landsat.html#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Get training data<span class="sc">/</span><span class="er">/</span></span>
+<span id="cb17-17"><a href="mapping-mangroves-using-landsat.html#cb17-17" aria-hidden="true" tabindex="-1"></a>var stratified <span class="ot">=</span> <span class="fu">mangroves_SNIC.addBands</span>(<span class="fu">ee.Image.pixelLonLat</span>())</span>
+<span id="cb17-18"><a href="mapping-mangroves-using-landsat.html#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.stratifiedSample</span>({</span>
+<span id="cb17-19"><a href="mapping-mangroves-using-landsat.html#cb17-19" aria-hidden="true" tabindex="-1"></a>      numPoints<span class="sc">:</span> <span class="dv">1</span>,</span>
+<span id="cb17-20"><a href="mapping-mangroves-using-landsat.html#cb17-20" aria-hidden="true" tabindex="-1"></a>      classBand<span class="sc">:</span> <span class="st">&#39;lc&#39;</span>,</span>
+<span id="cb17-21"><a href="mapping-mangroves-using-landsat.html#cb17-21" aria-hidden="true" tabindex="-1"></a>      scale<span class="sc">:</span> <span class="dv">30</span>,</span>
+<span id="cb17-22"><a href="mapping-mangroves-using-landsat.html#cb17-22" aria-hidden="true" tabindex="-1"></a>      region<span class="sc">:</span> <span class="fu">mangroves_SNIC.geometry</span>(),</span>
+<span id="cb17-23"><a href="mapping-mangroves-using-landsat.html#cb17-23" aria-hidden="true" tabindex="-1"></a>      classValues<span class="sc">:</span>[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>], <span class="sc">/</span><span class="er">/</span>  <span class="dv">1</span><span class="ot">=</span>manglar <span class="sc">/</span><span class="er">/</span> <span class="dv">2</span> <span class="ot">=</span> forest <span class="sc">/</span><span class="er">/</span> <span class="dv">3</span><span class="ot">=</span> pastos  <span class="sc">/</span><span class="er">/</span><span class="dv">4</span> water <span class="sc">/</span><span class="er">/</span><span class="dv">5</span> Other vegetation</span>
+<span id="cb17-24"><a href="mapping-mangroves-using-landsat.html#cb17-24" aria-hidden="true" tabindex="-1"></a>      classPoints<span class="sc">:</span> [<span class="dv">200</span>, <span class="dv">200</span>, <span class="dv">200</span>, <span class="dv">200</span>, <span class="dv">200</span>],  </span>
+<span id="cb17-25"><a href="mapping-mangroves-using-landsat.html#cb17-25" aria-hidden="true" tabindex="-1"></a>    })<span class="fu">.map</span>(<span class="cf">function</span>(f) {</span>
+<span id="cb17-26"><a href="mapping-mangroves-using-landsat.html#cb17-26" aria-hidden="true" tabindex="-1"></a>      return <span class="fu">f.setGeometry</span>(<span class="fu">ee.Geometry.Point</span>([<span class="fu">f.get</span>(<span class="st">&#39;longitude&#39;</span>), <span class="fu">f.get</span>(<span class="st">&#39;latitude&#39;</span>)]));</span>
+<span id="cb17-27"><a href="mapping-mangroves-using-landsat.html#cb17-27" aria-hidden="true" tabindex="-1"></a>    });</span>
+<span id="cb17-28"><a href="mapping-mangroves-using-landsat.html#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="fu">print</span> (<span class="st">&#39;Points per class&#39;</span>, <span class="fu">stratified.reduceColumns</span>(<span class="fu">ee.Reducer.frequencyHistogram</span>(),[<span class="st">&#39;classification&#39;</span>]));</span>
+<span id="cb17-29"><a href="mapping-mangroves-using-landsat.html#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span> (<span class="st">&#39;Strat&#39;</span>, <span class="fu">stratified.limit</span>(<span class="dv">10</span>))   </span>
+<span id="cb17-30"><a href="mapping-mangroves-using-landsat.html#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="mapping-mangroves-using-landsat.html#cb17-31" aria-hidden="true" tabindex="-1"></a>var new_bands <span class="ot">=</span> [<span class="st">&#39;B2&#39;</span>,<span class="st">&#39;B3&#39;</span>, <span class="st">&#39;B4&#39;</span>,<span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B7&#39;</span>, </span>
+<span id="cb17-32"><a href="mapping-mangroves-using-landsat.html#cb17-32" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;B3_p20&#39;</span>, <span class="st">&#39;B4_p20&#39;</span>,<span class="st">&#39;B5_p20&#39;</span>, <span class="st">&#39;B7_p20&#39;</span>, </span>
+<span id="cb17-33"><a href="mapping-mangroves-using-landsat.html#cb17-33" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;B3_p80&#39;</span>, <span class="st">&#39;B4_p80&#39;</span>,<span class="st">&#39;B5_p80&#39;</span>, <span class="st">&#39;B7_p80&#39;</span>, </span>
+<span id="cb17-34"><a href="mapping-mangroves-using-landsat.html#cb17-34" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;B3_stdDev&#39;</span>, <span class="st">&#39;B4_stdDev&#39;</span>,<span class="st">&#39;B5_stdDev&#39;</span>, <span class="st">&#39;B7_stdDev&#39;</span>, </span>
+<span id="cb17-35"><a href="mapping-mangroves-using-landsat.html#cb17-35" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;NDMI&#39;</span>,<span class="st">&#39;NDFI&#39;</span>, <span class="st">&#39;TCW&#39;</span>, <span class="st">&#39;TCG&#39;</span>, <span class="st">&#39;TCA&#39;</span>, <span class="st">&#39;SHADE_NDFI&#39;</span>, <span class="st">&#39;GV_NDFI&#39;</span>, <span class="st">&#39;SOIL_NDFI&#39;</span>, <span class="st">&#39;NPV_NDFI&#39;</span>,</span>
+<span id="cb17-36"><a href="mapping-mangroves-using-landsat.html#cb17-36" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;NDVI&#39;</span>, <span class="st">&#39;MNDWI&#39;</span>, <span class="st">&#39;MVI&#39;</span>, <span class="st">&#39;CMRI&#39;</span>, <span class="st">&#39;NBR&#39;</span>,</span>
+<span id="cb17-37"><a href="mapping-mangroves-using-landsat.html#cb17-37" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;GRAY_savg&#39;</span>, <span class="st">&#39;GRAY_var&#39;</span>, <span class="st">&#39;GRAY_ent&#39;</span>, <span class="st">&#39;GRAY_contrast&#39;</span>,</span>
+<span id="cb17-38"><a href="mapping-mangroves-using-landsat.html#cb17-38" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;ELEVATION&#39;</span>, <span class="st">&#39;DEM_SLOPE&#39;</span> , <span class="st">&#39;ASPECT&#39;</span>,  <span class="st">&#39;TEMPERATURE&#39;</span>, <span class="st">&#39;NIGHT_LIGHTS&#39;</span>, <span class="st">&#39;POPULATION&#39;</span>];</span></code></pre></div>
+<p>We use Image Segmentation SNIC algorithm for classification. For building the clusters we use MVI, it is performs well
+for delineating mangroves extent.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="mapping-mangroves-using-landsat.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Use MVI <span class="cf">for</span> clustering  and spectralmap <span class="cf">in</span> <span class="dv">2020</span>             </span>
+<span id="cb18-2"><a href="mapping-mangroves-using-landsat.html#cb18-2" aria-hidden="true" tabindex="-1"></a>var snic <span class="ot">=</span> <span class="fu">mangroves.snic_mangroves_col</span>(<span class="fu">spectral_predictors.select</span>(new_bands), <span class="st">&#39;MVI&#39;</span>);</span>
+<span id="cb18-3"><a href="mapping-mangroves-using-landsat.html#cb18-3" aria-hidden="true" tabindex="-1"></a>var y2017_2020_snic <span class="ot">=</span> <span class="fu">snic.filterMetadata</span>(<span class="st">&#39;composite_year&#39;</span>, <span class="st">&quot;equals&quot;</span>, <span class="dv">2020</span>)<span class="fu">.first</span>();</span>
+<span id="cb18-4"><a href="mapping-mangroves-using-landsat.html#cb18-4" aria-hidden="true" tabindex="-1"></a>var predictionBands<span class="ot">=</span><span class="fu">y2017_2020_snic.bandNames</span>()<span class="fu">.remove</span>(<span class="st">&#39;clusters&#39;</span>);</span>
+<span id="cb18-5"><a href="mapping-mangroves-using-landsat.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span> (predictionBands, <span class="st">&#39;predictionBands&#39;</span>);</span>
+<span id="cb18-6"><a href="mapping-mangroves-using-landsat.html#cb18-6" aria-hidden="true" tabindex="-1"></a>snic <span class="ot">=</span> <span class="fu">snic.select</span>(predictionBands);</span>
+<span id="cb18-7"><a href="mapping-mangroves-using-landsat.html#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="mapping-mangroves-using-landsat.html#cb18-8" aria-hidden="true" tabindex="-1"></a>var sampleAll <span class="ot">=</span> <span class="fu">y2017_2020_snic.sampleRegions</span>({</span>
+<span id="cb18-9"><a href="mapping-mangroves-using-landsat.html#cb18-9" aria-hidden="true" tabindex="-1"></a>  collection<span class="sc">:</span> stratified, </span>
+<span id="cb18-10"><a href="mapping-mangroves-using-landsat.html#cb18-10" aria-hidden="true" tabindex="-1"></a>  properties<span class="sc">:</span> [<span class="st">&#39;lc&#39;</span>],</span>
+<span id="cb18-11"><a href="mapping-mangroves-using-landsat.html#cb18-11" aria-hidden="true" tabindex="-1"></a>  scale<span class="sc">:</span> <span class="dv">30</span>,</span>
+<span id="cb18-12"><a href="mapping-mangroves-using-landsat.html#cb18-12" aria-hidden="true" tabindex="-1"></a>  tileScale<span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb18-13"><a href="mapping-mangroves-using-landsat.html#cb18-13" aria-hidden="true" tabindex="-1"></a>  geometries<span class="sc">:</span> true,</span>
+<span id="cb18-14"><a href="mapping-mangroves-using-landsat.html#cb18-14" aria-hidden="true" tabindex="-1"></a>})<span class="fu">.randomColumn</span>();</span>
+<span id="cb18-15"><a href="mapping-mangroves-using-landsat.html#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="mapping-mangroves-using-landsat.html#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="fu">print</span>(<span class="st">&#39;Full sample size&#39;</span>,<span class="fu">sampleAll.size</span>());</span>
+<span id="cb18-17"><a href="mapping-mangroves-using-landsat.html#cb18-17" aria-hidden="true" tabindex="-1"></a>sampleAll <span class="ot">=</span> <span class="fu">sampleAll.randomColumn</span>({seed<span class="sc">:</span> <span class="dv">10</span>}); </span>
+<span id="cb18-18"><a href="mapping-mangroves-using-landsat.html#cb18-18" aria-hidden="true" tabindex="-1"></a>var split <span class="ot">=</span> <span class="fl">0.7</span>;  <span class="sc">/</span><span class="er">/</span> Roughly <span class="dv">70</span><span class="sc">% training, 30%</span> testing</span>
+<span id="cb18-19"><a href="mapping-mangroves-using-landsat.html#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>create the training set</span>
+<span id="cb18-20"><a href="mapping-mangroves-using-landsat.html#cb18-20" aria-hidden="true" tabindex="-1"></a>var trainingPts <span class="ot">=</span> <span class="fu">sampleAll.filter</span>(<span class="fu">ee.Filter.lt</span>(<span class="st">&#39;random&#39;</span>, split));<span class="sc">/</span><span class="er">/</span><span class="fu">print</span>(<span class="st">&#39;trainingPoints&#39;</span>,trainingPts);</span>
+<span id="cb18-21"><a href="mapping-mangroves-using-landsat.html#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="fu">Export.table.toAsset</span>(trainingPts, <span class="st">&#39;train&#39;</span>, <span class="st">&#39;SilviaCarbon_COL/features/train_Landsat&#39;</span> )</span>
+<span id="cb18-22"><a href="mapping-mangroves-using-landsat.html#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>create the test set</span>
+<span id="cb18-23"><a href="mapping-mangroves-using-landsat.html#cb18-23" aria-hidden="true" tabindex="-1"></a>var testingPts <span class="ot">=</span> <span class="fu">sampleAll.filter</span>(<span class="fu">ee.Filter.gte</span>(<span class="st">&#39;random&#39;</span>, split));<span class="sc">/</span><span class="er">/</span><span class="fu">print</span>(<span class="st">&#39;testingPoints&#39;</span>,testingPts);</span>
+<span id="cb18-24"><a href="mapping-mangroves-using-landsat.html#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="fu">Export.table.toAsset</span>(testingPts, <span class="st">&#39;test&#39;</span>, <span class="st">&#39;SilviaCarbon_COL/features/test_Landsat&#39;</span> )</span>
+<span id="cb18-25"><a href="mapping-mangroves-using-landsat.html#cb18-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-26"><a href="mapping-mangroves-using-landsat.html#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="mapping-mangroves-using-landsat.html#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>After exporting and clean the points you can call them<span class="sc">:</span></span>
+<span id="cb18-28"><a href="mapping-mangroves-using-landsat.html#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="er">//</span>var train <span class="ot">=</span> <span class="fu">ee.FeatureCollection</span>(<span class="st">&#39;projects/mangrovescience/SilviaCarbon_COL/features/train_Landsat&#39;</span>);                            </span>
+<span id="cb18-29"><a href="mapping-mangroves-using-landsat.html#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Otherwise just sample using random procedure<span class="sc">!</span></span>
+<span id="cb18-30"><a href="mapping-mangroves-using-landsat.html#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="mapping-mangroves-using-landsat.html#cb18-31" aria-hidden="true" tabindex="-1"></a>var paleta<span class="ot">=</span> <span class="fu">ee.List</span>([<span class="st">&quot;ffffff&quot;</span>, <span class="st">&quot;FF0000&quot;</span>,<span class="st">&quot;00ff00 &quot;</span>, <span class="st">&quot;FFA500&quot;</span>, <span class="st">&quot;0000FF&quot;</span>, <span class="st">&quot;32CD32&quot;</span>,]); <span class="sc">/</span><span class="er">/</span> includes one color at the beggining  because class starts <span class="cf">in</span> <span class="dv">1</span> NOT <span class="cf">in</span> ZERO</span>
+<span id="cb18-32"><a href="mapping-mangroves-using-landsat.html#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-33"><a href="mapping-mangroves-using-landsat.html#cb18-33" aria-hidden="true" tabindex="-1"></a>var features <span class="ot">=</span> <span class="fu">trainingPts.map</span>(<span class="cf">function</span>(f) {</span>
+<span id="cb18-34"><a href="mapping-mangroves-using-landsat.html#cb18-34" aria-hidden="true" tabindex="-1"></a>  var klass <span class="ot">=</span> <span class="fu">f.get</span>(<span class="st">&quot;lc&quot;</span>);</span>
+<span id="cb18-35"><a href="mapping-mangroves-using-landsat.html#cb18-35" aria-hidden="true" tabindex="-1"></a>  return <span class="fu">f.set</span>({style<span class="sc">:</span> {color<span class="sc">:</span> <span class="fu">paleta.get</span>(klass) }});</span>
+<span id="cb18-36"><a href="mapping-mangroves-using-landsat.html#cb18-36" aria-hidden="true" tabindex="-1"></a>});</span>
+<span id="cb18-37"><a href="mapping-mangroves-using-landsat.html#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="fu">Map.addLayer</span>(<span class="fu">features.style</span>({styleProperty<span class="sc">:</span> <span class="st">&quot;style&quot;</span>}),{}, <span class="st">&#39;Training Points&#39;</span>, true);</span></code></pre></div>
+<p>We also use 90 trees after tunning the numberofTrees. It seems 90 provides a more stable accuracy.</p>
+<div class="figure"><span id="fig:my-fig9"></span>
+<img src="images/hypertunning.PNG" alt="Accuracy and amount of trees" width="450px" />
+<p class="caption">
+Figure 3.7: Accuracy and amount of trees
+</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="mapping-mangroves-using-landsat.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">//</span>Build the RF classifer<span class="sc">:</span></span>
+<span id="cb19-2"><a href="mapping-mangroves-using-landsat.html#cb19-2" aria-hidden="true" tabindex="-1"></a>var classifier_snic <span class="ot">=</span> <span class="fu">ee.Classifier.smileRandomForest</span>(<span class="dv">90</span>)<span class="fu">.setOutputMode</span>(<span class="st">&#39;CLASSIFICATION&#39;</span>)  </span>
+<span id="cb19-3"><a href="mapping-mangroves-using-landsat.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span><span class="dv">90</span> seems a good number of trees and Tunning plot</span>
+<span id="cb19-4"><a href="mapping-mangroves-using-landsat.html#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.train</span>({</span>
+<span id="cb19-5"><a href="mapping-mangroves-using-landsat.html#cb19-5" aria-hidden="true" tabindex="-1"></a>  features<span class="sc">:</span>trainingPts, </span>
+<span id="cb19-6"><a href="mapping-mangroves-using-landsat.html#cb19-6" aria-hidden="true" tabindex="-1"></a>  classProperty<span class="sc">:</span><span class="st">&#39;lc&#39;</span>, </span>
+<span id="cb19-7"><a href="mapping-mangroves-using-landsat.html#cb19-7" aria-hidden="true" tabindex="-1"></a>  inputProperties<span class="sc">:</span> predictionBands</span>
+<span id="cb19-8"><a href="mapping-mangroves-using-landsat.html#cb19-8" aria-hidden="true" tabindex="-1"></a>});</span>
+<span id="cb19-9"><a href="mapping-mangroves-using-landsat.html#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="mapping-mangroves-using-landsat.html#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> Run <span class="fu">.explain</span>() to see what the classifer looks like</span>
+<span id="cb19-11"><a href="mapping-mangroves-using-landsat.html#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">classifier_snic.explain</span>())</span>
+<span id="cb19-12"><a href="mapping-mangroves-using-landsat.html#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="mapping-mangroves-using-landsat.html#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="mapping-mangroves-using-landsat.html#cb19-14" aria-hidden="true" tabindex="-1"></a>var test <span class="ot">=</span> <span class="fu">y2017_2020_snic.sampleRegions</span>({</span>
+<span id="cb19-15"><a href="mapping-mangroves-using-landsat.html#cb19-15" aria-hidden="true" tabindex="-1"></a>  collection<span class="sc">:</span> testingPts,</span>
+<span id="cb19-16"><a href="mapping-mangroves-using-landsat.html#cb19-16" aria-hidden="true" tabindex="-1"></a>  properties<span class="sc">:</span> [<span class="st">&#39;lc&#39;</span>],</span>
+<span id="cb19-17"><a href="mapping-mangroves-using-landsat.html#cb19-17" aria-hidden="true" tabindex="-1"></a>  scale<span class="sc">:</span> <span class="dv">30</span>,</span>
+<span id="cb19-18"><a href="mapping-mangroves-using-landsat.html#cb19-18" aria-hidden="true" tabindex="-1"></a>  tileScale<span class="sc">:</span> <span class="dv">2</span></span>
+<span id="cb19-19"><a href="mapping-mangroves-using-landsat.html#cb19-19" aria-hidden="true" tabindex="-1"></a>});</span>
+<span id="cb19-20"><a href="mapping-mangroves-using-landsat.html#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="mapping-mangroves-using-landsat.html#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> Tune the numberOfTrees parameter.</span>
+<span id="cb19-22"><a href="mapping-mangroves-using-landsat.html#cb19-22" aria-hidden="true" tabindex="-1"></a>var numTreesList <span class="ot">=</span> <span class="fu">ee.List.sequence</span>(<span class="dv">10</span>, <span class="dv">150</span>, <span class="dv">5</span>);</span>
+<span id="cb19-23"><a href="mapping-mangroves-using-landsat.html#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="mapping-mangroves-using-landsat.html#cb19-24" aria-hidden="true" tabindex="-1"></a>var accuracies <span class="ot">=</span> <span class="fu">numTreesList.map</span>(<span class="cf">function</span>(numTrees) {</span>
+<span id="cb19-25"><a href="mapping-mangroves-using-landsat.html#cb19-25" aria-hidden="true" tabindex="-1"></a>  var classifier <span class="ot">=</span> <span class="fu">ee.Classifier.smileRandomForest</span>(numTrees)</span>
+<span id="cb19-26"><a href="mapping-mangroves-using-landsat.html#cb19-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">.train</span>({</span>
+<span id="cb19-27"><a href="mapping-mangroves-using-landsat.html#cb19-27" aria-hidden="true" tabindex="-1"></a>        features<span class="sc">:</span> trainingPts,</span>
+<span id="cb19-28"><a href="mapping-mangroves-using-landsat.html#cb19-28" aria-hidden="true" tabindex="-1"></a>        classProperty<span class="sc">:</span> <span class="st">&#39;lc&#39;</span>,</span>
+<span id="cb19-29"><a href="mapping-mangroves-using-landsat.html#cb19-29" aria-hidden="true" tabindex="-1"></a>        inputProperties<span class="sc">:</span> predictionBands</span>
+<span id="cb19-30"><a href="mapping-mangroves-using-landsat.html#cb19-30" aria-hidden="true" tabindex="-1"></a>      });</span>
+<span id="cb19-31"><a href="mapping-mangroves-using-landsat.html#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-32"><a href="mapping-mangroves-using-landsat.html#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="sc">/</span><span class="er">/</span> Here we are classifying a table instead of an image</span>
+<span id="cb19-33"><a href="mapping-mangroves-using-landsat.html#cb19-33" aria-hidden="true" tabindex="-1"></a>  <span class="sc">/</span><span class="er">/</span> Classifiers work on both images and tables</span>
+<span id="cb19-34"><a href="mapping-mangroves-using-landsat.html#cb19-34" aria-hidden="true" tabindex="-1"></a>  return test</span>
+<span id="cb19-35"><a href="mapping-mangroves-using-landsat.html#cb19-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.classify</span>(classifier)</span>
+<span id="cb19-36"><a href="mapping-mangroves-using-landsat.html#cb19-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.errorMatrix</span>(<span class="st">&#39;lc&#39;</span>, <span class="st">&#39;classification&#39;</span>)</span>
+<span id="cb19-37"><a href="mapping-mangroves-using-landsat.html#cb19-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.accuracy</span>();</span>
+<span id="cb19-38"><a href="mapping-mangroves-using-landsat.html#cb19-38" aria-hidden="true" tabindex="-1"></a>});</span>
+<span id="cb19-39"><a href="mapping-mangroves-using-landsat.html#cb19-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="mapping-mangroves-using-landsat.html#cb19-40" aria-hidden="true" tabindex="-1"></a>var chart <span class="ot">=</span> <span class="fu">ui.Chart.array.values</span>({</span>
+<span id="cb19-41"><a href="mapping-mangroves-using-landsat.html#cb19-41" aria-hidden="true" tabindex="-1"></a>  array<span class="sc">:</span> <span class="fu">ee.Array</span>(accuracies),</span>
+<span id="cb19-42"><a href="mapping-mangroves-using-landsat.html#cb19-42" aria-hidden="true" tabindex="-1"></a>  axis<span class="sc">:</span> <span class="dv">0</span>,</span>
+<span id="cb19-43"><a href="mapping-mangroves-using-landsat.html#cb19-43" aria-hidden="true" tabindex="-1"></a>  xLabels<span class="sc">:</span> numTreesList</span>
+<span id="cb19-44"><a href="mapping-mangroves-using-landsat.html#cb19-44" aria-hidden="true" tabindex="-1"></a>  })<span class="fu">.setOptions</span>({</span>
+<span id="cb19-45"><a href="mapping-mangroves-using-landsat.html#cb19-45" aria-hidden="true" tabindex="-1"></a>      title<span class="sc">:</span> <span class="st">&#39;Hyperparameter Tuning for the numberOfTrees Parameters&#39;</span>,</span>
+<span id="cb19-46"><a href="mapping-mangroves-using-landsat.html#cb19-46" aria-hidden="true" tabindex="-1"></a>      vAxis<span class="sc">:</span> {title<span class="sc">:</span> <span class="st">&#39;Validation Accuracy&#39;</span>},</span>
+<span id="cb19-47"><a href="mapping-mangroves-using-landsat.html#cb19-47" aria-hidden="true" tabindex="-1"></a>      hAxis<span class="sc">:</span> {title<span class="sc">:</span> <span class="st">&#39;Number of Tress&#39;</span>, gridlines<span class="sc">:</span> {count<span class="sc">:</span> <span class="dv">15</span>}}</span>
+<span id="cb19-48"><a href="mapping-mangroves-using-landsat.html#cb19-48" aria-hidden="true" tabindex="-1"></a>  });</span>
+<span id="cb19-49"><a href="mapping-mangroves-using-landsat.html#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(chart);</span>
+<span id="cb19-50"><a href="mapping-mangroves-using-landsat.html#cb19-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-51"><a href="mapping-mangroves-using-landsat.html#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span>Full SNIC across whole <span class="fu">collection</span> (all years)</span>
+<span id="cb19-52"><a href="mapping-mangroves-using-landsat.html#cb19-52" aria-hidden="true" tabindex="-1"></a>var classifiedCollection <span class="ot">=</span> snic</span>
+<span id="cb19-53"><a href="mapping-mangroves-using-landsat.html#cb19-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.map</span>(<span class="cf">function</span>(image) { </span>
+<span id="cb19-54"><a href="mapping-mangroves-using-landsat.html#cb19-54" aria-hidden="true" tabindex="-1"></a>    return <span class="fu">image.classify</span>(classifier_snic)<span class="fu">.copyProperties</span>(image);</span>
+<span id="cb19-55"><a href="mapping-mangroves-using-landsat.html#cb19-55" aria-hidden="true" tabindex="-1"></a>  });</span>
+<span id="cb19-56"><a href="mapping-mangroves-using-landsat.html#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span> (classifiedCollection, <span class="st">&#39;classifiedCollection&#39;</span>);</span></code></pre></div>
 
 </div>
 </div>
