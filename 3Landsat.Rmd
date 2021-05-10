@@ -148,6 +148,10 @@ Just click the Run button 2 or 3 times quickly.
 
 Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process for each 3-year composite. Open the code: **7.Classification_Landsat_TimeSeries**
 
+### Reading Landsat spectral data and stratified sampling
+
+The first step in the code is  put together all fitted values and percentiles in one final ImageCollection.
+
 ```{r eval=FALSE}
 var ftv_values  =  ee.Image("projects/mangrovescience/SilviaCarbon_COL/Landsat_Predictors/Cienaga-NBR-7-19852020-01011231EPOCHS3");
 var percentiles = ee.FeatureCollection("projects/mangrovescience/SilviaCarbon_COL/Landsat_Predictors/Cienaga_Percentiles");
@@ -185,17 +189,13 @@ var collection_final = innerJoin.map(function(feature) {
 print('collection_final', collection_final);
 ```
 
-Now we can calculate different vegetation indices, add other ancillary information
-and also import the basemap from which we want to collect the spectral data. The basemap that we are going to use is the map we created using S1+S2 which is a good representation of different classes for the period 2019-2020.
-
-We distributed 200 per each class. See example of the distribution:
-
-```{r my-fig8, out.width = "450px",fig.cap="Sampled points over Landsat composite 2017-2020", echo=FALSE, message=FALSE}
-knitr::include_graphics("images/cienaga.PNG")
-```
-
+Now we can calculate different vegetation indices, and add other ancillary information.
+Also we can import the basemap from which we want to collect the spectral data. The basemap that we are going to use is the map we created using S1+S2 which is a good representation of different classes for the period 2019-2020.
 
 ```{r eval=FALSE}
+var mangroves = require('users/murillop/NASA_mangroves:mangroves');
+var base_predictors = mangroves.getAncillary(); 
+
 mangroves_SNIC = mangroves_SNIC.clip(collection_final.first().geometry()).rename('lc');
 Map.addLayer(mangroves_SNIC, {min:1, max:5, palette: ["red","green","yellow","blue", "Chartreuse"]}, 'Basemap 2019-2020');
 
@@ -209,7 +209,6 @@ spectral_predictors = spectral_predictors.map(function(img){
 //Select Landsat data in 2017-2020
 var y2017_2020_pixel = spectral_predictors.filterMetadata('composite_year', "equals", 2020).first();
 Map.addLayer(y2017_2020_pixel, {min:100, max:4000, bands:['B4','B5','B3']}, 'Spectral Landsat 2017-2020');
-
 
 //Get training data//
 var stratified = mangroves_SNIC.addBands(ee.Image.pixelLonLat())
@@ -237,11 +236,26 @@ var new_bands = ['B2','B3', 'B4','B5', 'B7',
                  
 ```  
 
-We use Image Segmentation SNIC algorithm for classification. For building the clusters we use MVI, it is performs well
-for delineating mangroves extent. 
+We distributed 200 per each class. See example of the distribution:
+
+```{r my-fig8, out.width = "450px",fig.cap="Sampled points over Landsat composite 2017-2020", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/cienaga.PNG")
+```
+
+### Apply SNIC 
+
+We use Image Segmentation SNIC algorithm for classification. For building the clusters we use MVI, it is performs well for delineating mangroves extent. You can use other indices. Currently the available indices are: 
 
 ```{r eval=FALSE}
-//Use MVI for clustering  and spectralmap in 2020             
+['NDMI','NDFI', 'TCW', 'TCG', 'TCA', 'SHADE_NDFI', 'GV_NDFI',
+'SOIL_NDFI', 'NPV_NDFI', 'NDVI', 'MNDWI', 'MVI', 'CMRI', 'NBR'] 
+```  
+
+However you can add your own indices once you save the main library ('users/murillop/NASA_mangroves:mangroves');
+in your own repository. 
+
+```{r eval=FALSE}
+//Use MVI for clustering  and spectralmap in 2020.             
 var snic = mangroves.snic_mangroves_col(spectral_predictors.select(new_bands), 'MVI');
 var y2017_2020_snic = snic.filterMetadata('composite_year', "equals", 2020).first();
 var predictionBands=y2017_2020_snic.bandNames().remove('clusters');
@@ -280,13 +294,7 @@ var features = trainingPts.map(function(f) {
 Map.addLayer(features.style({styleProperty: "style"}),{}, 'Training Points', true);
 ```
 
-We also use 90 trees after tunning the numberofTrees. It seems 90 provides a more stable accuracy. 
-
-```{r my-fig9, out.width = "450px",fig.cap="Accuracy and amount of trees", echo=FALSE, message=FALSE}
-knitr::include_graphics("images/hypertunning.PNG")
-```
-
-
+We also use 90 trees after tunning. It seems 90 provides a more stable accuracy. See next section.
 
 ```{r eval=FALSE}
 ///Build the RF classifer:
@@ -297,10 +305,15 @@ var classifier_snic = ee.Classifier.smileRandomForest(90).setOutputMode('CLASSIF
   classProperty:'lc', 
   inputProperties: predictionBands
 });
+```
 
+### Tunning for the amount of trees
+
+We mimimize the number of trees to optimize computation demand. We identify the number of trees using a simple tunnin available for more detail [**here.**](https://courses.spatialthoughts.com/end-to-end-gee.html#hyperparameter-tuning){target="_blank"}
+
+```{r eval=FALSE}
 // Run .explain() to see what the classifer looks like
 print(classifier_snic.explain())
-
 
 var test = y2017_2020_snic.sampleRegions({
   collection: testingPts,
@@ -311,7 +324,6 @@ var test = y2017_2020_snic.sampleRegions({
 
 // Tune the numberOfTrees parameter.
 var numTreesList = ee.List.sequence(10, 150, 5);
-
 var accuracies = numTreesList.map(function(numTrees) {
   var classifier = ee.Classifier.smileRandomForest(numTrees)
       .train({
@@ -338,12 +350,42 @@ var chart = ui.Chart.array.values({
       hAxis: {title: 'Number of Tress', gridlines: {count: 15}}
   });
 print(chart);
+```
 
+```{r my-fig9, out.width = "450px",fig.cap="Accuracy and amount of trees", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/hypertunning.PNG")
+```
+
+### Apply SNIC and export each land cover map
+
+```{r eval=FALSE}
 //Full SNIC across whole collection (all years)
 var classifiedCollection = snic
   .map(function(image) { 
     return image.classify(classifier_snic).copyProperties(image);
   });
 print (classifiedCollection, 'classifiedCollection');
+
+Map.addLayer(classifiedCollection.first(),{min:1, max:5, palette: ["red","green","yellow","blue", "Chartreuse"]}, '1985-1987 SNIC classification');
+
+classifiedCollection
+  .aggregate_array('composite_year')
+  .evaluate(function (systemIndexes) {
+    systemIndexes.forEach(function (year, i) {
+      //print(i); // This is your 0-based index
+      var image = classifiedCollection
+        .filterMetadata('composite_year', 'equals', year)
+        .first();
+      Export.image.toAsset({
+        image: image,
+        description: 'lc_' + year,
+        assetId: 'lc_' + year,
+        scale: 30,
+        maxPixels: 1e13,
+        region: classifiedCollection.first().geometry(),
+      });      
+    });
+});
 ```
+
 

@@ -21,3 +21,7 @@ input-parameters-2
 adding-percentiles
 exporting-assets
 building-3-years-composite-maps
+reading-landsat-spectral-data-and-stratified-sampling
+apply-snic
+tunning-for-the-amount-of-trees
+apply-snic-and-export-each-land-cover-map
