@@ -387,5 +387,16 @@ classifiedCollection
     });
 });
 ```
+### Maps visualization
+
+We created a gif to visualize the dynamics of mangroves in Cienaga Grande. Our approach provides a quick reference to evaluate mangroves loss and gains. There is a high variability along time in this study region and further validation and cleaning the outputs is necessary.
+
+```{r my-fig10, out.width = "650px",fig.cap="Fitted Values Landsat time-series", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/Fitted.gif")
+```
+
+```{r my-fig11, out.width = "650px",fig.cap="Landcover maps", echo=FALSE, message=FALSE}
+knitr::include_graphics("images/landcover.gif")
+```
 
 

@@ -7,6 +7,8 @@ fig:my-fig6
 fig:my-fig7
 fig:my-fig8
 fig:my-fig9
+fig:my-fig10
+fig:my-fig11
 overview
 mapping-mangroves-using-sentinel12
 preprocessingexporting-sentinel-1-and-sentinel-2
@@ -25,3 +27,4 @@ reading-landsat-spectral-data-and-stratified-sampling
 apply-snic
 tunning-for-the-amount-of-trees
 apply-snic-and-export-each-land-cover-map
+maps-visualization
