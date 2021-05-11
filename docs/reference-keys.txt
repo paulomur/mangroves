@@ -7,8 +7,7 @@ fig:my-fig6
 fig:my-fig7
 fig:my-fig8
 fig:my-fig9
-fig:my-fig10
-fig:my-fig11
+fig:myfig10
 overview
 mapping-mangroves-using-sentinel12
 preprocessingexporting-sentinel-1-and-sentinel-2
