@@ -1,10 +1,10 @@
 # Mapping mangroves using Landsat
 
-For mapping historical mangroves change using Landsat our approach is a bit different than for S1+S2.
+For mapping mangroves change using Landsat our approach is a bit different than for S1+S2.
 
-The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ LandTrendr.
+The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ  [**LandTrendr**](https://emapr.github.io/LT-GEE/landtrendr.html){target="_blank"} algorithm.
 
-Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from Landtrendr.
+Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from LandTrendr.
 
 This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
 filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps  
@@ -22,11 +22,11 @@ In tropical areas clouds and lack of Landsat observations affect tracking evolut
 
 ### Remove bad imagery 
 
-In some cases even after removing masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.
+In some cases even after masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.
 
-This process mainly important for early years in 80 and 90's. Given that few images are available, onyl one with problems can affect our final composite product.
+This process is mainly important for early years in 80 and 90's. Given that few images are available. In somecases only one with problems can affect our final composite product.
 
-Using the **5.Remove bad imagery Landsat** code in the repository you can identify which ones should not be included in the process.
+Using the **5. Remove bad imagery Landsat** code in the repository you can identify which ones should not be included in the process.
 
 
 ```{r my-fig4, out.width = "150%", fig.cap="Image with remaing clouds (left), original image (right)", echo=FALSE, message=FALSE}
@@ -50,7 +50,7 @@ var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box
 
 Common parameters in LandTrendr includes the name of the task, region, years and others.
 In this example we use NBR as main index for segmentation and the new fitted bands will be the spectral bands 
-from Landsat. Our outputs fitted data could be also other indices not necessarily the spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The code that includes all next steps is
+from Landsat. Our fitted data outputs could be also other indices not necessarily the Landsat spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The code that includes all next steps is
 **6. Get_Fiited_data_and_Percentiles_Landsat**
 
 ```{r eval=FALSE}
@@ -81,6 +81,13 @@ var featureKey = 'PATH_ROW';      // Name 2 // Name of the field
 ...
 
 ```
+This code has many improvements:
+Topographic correction
+Remove scenes borders (-2km)
+Many different vegetation indices for temporal segmentation
+You can create composites at different intervals. But it is most
+effective (computationally) for composites each 3 or more years.
+
 More details about this step on (https://emapr.github.io/LT-GEE/landtrendr.html)
 
 
@@ -123,7 +130,7 @@ percentil
     Export.image.toAsset({
       image: image,
       description: 'percentiles_' + year,
-      assetId: 'SilviaCarbon_COL/Landsat_Predictors/Cienaga_Percentiles/percentiles_' + year, 
+      assetId: 'YOURCOLLECTION/percentiles_' + year, 
       crs: outProj,
       scale: 30,
       maxPixels: 1e13,
@@ -141,12 +148,12 @@ After you remove bad images and change parameters you can export the fitted imag
 knitr::include_graphics("images/tasks.PNG")
 ```
 
-Note: It is also possible to see <span style="color:red;"> RangeError: Maximum call stack size exceeded </span>.
-Just click the Run button 2 or 3 times quickly. 
+Note:  <span style="color:red;"> When you run the code the script is going to be freeze for some seconds, Just click Wait if GEE asked you.</span>.
 
-## Building 3-years composite maps
 
-Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process for each 3-year composite. Open the code: **7.Classification_Landsat_TimeSeries**
+## Building 3-years landcover maps
+
+Once you save the fitted image data and the percentiles we can combine them into a final ImageCollection to run the classification process for each 3-year composite. Open the code: **7. Classification_Landsat_TimeSeries**
 
 ### Reading Landsat spectral data and stratified sampling
 
@@ -309,7 +316,7 @@ var classifier_snic = ee.Classifier.smileRandomForest(90).setOutputMode('CLASSIF
 
 ### Tunning for the amount of trees
 
-We mimimize the number of trees to optimize computation demand. We identify the number of trees using a simple tunnin available for more detail [**here.**](https://courses.spatialthoughts.com/end-to-end-gee.html#hyperparameter-tuning){target="_blank"}
+I mimimize the number of trees to optimize computation demand. We identify the number of trees using a simple tunnin available for more detail [**here.**](https://courses.spatialthoughts.com/end-to-end-gee.html#hyperparameter-tuning){target="_blank"}
 
 ```{r eval=FALSE}
 // Run .explain() to see what the classifer looks like
@@ -398,6 +405,12 @@ par(mar = c(4, 4, .1, .1))
 knitr::include_graphics("images/Fitted.gif")
 knitr::include_graphics("images/landcover.gif")
 ```
+
+### Limitations
+
+Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach.
+
+While the accuracy depends of many factors are methodology combines the current state-of-the-art elements to be repeatable and reproducible in any other part of the world.
 
 <!-- # ```{r my-fig10, out.width = "650px",fig.cap="Fitted Values Landsat time-series", echo=FALSE, message=FALSE} -->
 <!-- # knitr::include_graphics("images/Fitted.gif") -->
