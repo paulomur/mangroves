@@ -248,12 +248,12 @@ from Landsat. Our fitted data outputs could be also other indices not necessaril
 <span id="cb14-3"><a href="mapping-mangroves-using-landsat.html#cb14-3" aria-hidden="true" tabindex="-1"></a>var featureKey <span class="ot">=</span> <span class="st">&#39;PATH_ROW&#39;</span>;      <span class="sc">/</span><span class="er">/</span> Name <span class="dv">2</span> <span class="sc">/</span><span class="er">/</span> Name of the field</span>
 <span id="cb14-4"><a href="mapping-mangroves-using-landsat.html#cb14-4" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
 <p>This code has many improvements:
-Topographic correction
-Remove scenes borders (-2km)
-Many different vegetation indices for temporal segmentation
-You can create composites at different intervals. But it is most
-effective (computationally) for composites each 3 or more years.</p>
-<p>More details about this step on (<a href="https://emapr.github.io/LT-GEE/landtrendr.html" class="uri">https://emapr.github.io/LT-GEE/landtrendr.html</a>)</p>
+1) Topographic correction
+2) Remove scenes borders (-2km buffer)
+3) Many different vegetation indices for temporal segmentation
+4) You can create composites at different intervals. But it is most
+effective (computationally) for creating composites each 3 or more years.</p>
+<p>More details about this on: <a href="https://emapr.github.io/LT-GEE/landtrendr.html" class="uri">https://emapr.github.io/LT-GEE/landtrendr.html</a></p>
 </div>
 <div id="input-parameters-2" class="section level3" number="3.1.3">
 <h3><span class="header-section-number">3.1.3</span> Input parameters (2)</h3>
@@ -355,7 +355,7 @@ Figure 3.5: Tasks
 <span id="cb16-34"><a href="mapping-mangroves-using-landsat.html#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;collection_final&#39;</span>, collection_final);</span></code></pre></div>
 <p>Now we can calculate different vegetation indices, and add other ancillary information.
 Also we can import the basemap from which we want to collect the spectral data. The basemap that we are going to use is the map we created using S1+S2 which is a good representation of different classes for the period 2019-2020.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="mapping-mangroves-using-landsat.html#cb17-1" aria-hidden="true" tabindex="-1"></a>var mangroves <span class="ot">=</span> <span class="fu">require</span>(<span class="st">&#39;users/murillop/NASA_mangroves:mangroves&#39;</span>);</span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="mapping-mangroves-using-landsat.html#cb17-1" aria-hidden="true" tabindex="-1"></a>var mangroves <span class="ot">=</span> <span class="fu">require</span>(<span class="st">&#39;users/murillop/mapping_mangroves:mangroves&#39;</span>);</span>
 <span id="cb17-2"><a href="mapping-mangroves-using-landsat.html#cb17-2" aria-hidden="true" tabindex="-1"></a>var base_predictors <span class="ot">=</span> <span class="fu">mangroves.getAncillary</span>(); </span>
 <span id="cb17-3"><a href="mapping-mangroves-using-landsat.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="mapping-mangroves-using-landsat.html#cb17-4" aria-hidden="true" tabindex="-1"></a>mangroves_SNIC <span class="ot">=</span> <span class="fu">mangroves_SNIC.clip</span>(<span class="fu">collection_final.first</span>()<span class="fu">.geometry</span>())<span class="fu">.rename</span>(<span class="st">&#39;lc&#39;</span>);</span>
@@ -548,7 +548,7 @@ Figure 3.8: Comparing Landsat vs Land cover maps
 </div>
 <div id="limitations" class="section level3" number="3.2.6">
 <h3><span class="header-section-number">3.2.6</span> Limitations</h3>
-<p>Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and quality and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach.</p>
+<p>Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach. For instance, in this study case we use 200 points for each class, but points could be located at the same cluster.</p>
 <p>While the accuracy depends of many factors are methodology combines the current state-of-the-art elements to be repeatable and reproducible in any other part of the world.</p>
 <!-- # ```{r my-fig10, out.width = "650px",fig.cap="Fitted Values Landsat time-series", echo=FALSE, message=FALSE} -->
 <!-- # knitr::include_graphics("images/Fitted.gif") -->

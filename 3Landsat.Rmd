@@ -82,13 +82,13 @@ var featureKey = 'PATH_ROW';      // Name 2 // Name of the field
 
 ```
 This code has many improvements:
-Topographic correction
-Remove scenes borders (-2km)
-Many different vegetation indices for temporal segmentation
-You can create composites at different intervals. But it is most
-effective (computationally) for composites each 3 or more years.
+1) Topographic correction
+2) Remove scenes borders (-2km buffer)
+3) Many different vegetation indices for temporal segmentation
+4) You can create composites at different intervals. But it is most
+effective (computationally) for creating composites each 3 or more years.
 
-More details about this step on (https://emapr.github.io/LT-GEE/landtrendr.html)
+More details about this on: https://emapr.github.io/LT-GEE/landtrendr.html
 
 
 ### Input parameters (2)
@@ -200,7 +200,7 @@ Now we can calculate different vegetation indices, and add other ancillary infor
 Also we can import the basemap from which we want to collect the spectral data. The basemap that we are going to use is the map we created using S1+S2 which is a good representation of different classes for the period 2019-2020.
 
 ```{r eval=FALSE}
-var mangroves = require('users/murillop/NASA_mangroves:mangroves');
+var mangroves = require('users/murillop/mapping_mangroves:mangroves');
 var base_predictors = mangroves.getAncillary(); 
 
 mangroves_SNIC = mangroves_SNIC.clip(collection_final.first().geometry()).rename('lc');
@@ -408,7 +408,7 @@ knitr::include_graphics("images/landcover.gif")
 
 ### Limitations
 
-Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach.
+Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach. For instance, in this study case we use 200 points for each class, but points could be located at the same cluster.
 
 While the accuracy depends of many factors are methodology combines the current state-of-the-art elements to be repeatable and reproducible in any other part of the world.
 
