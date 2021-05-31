@@ -19,4 +19,4 @@ More info about other mangroves related projects **https://mangrovescience.org/*
 knitr::include_graphics("images/mangroves.jpg")
 ```
 
-You can cite this as: [![DOI](https://zenodo.org/badge/357413541.svg)](https://zenodo.org/badge/latestdoi/357413541)
+You can cite this as: [![DOI](https://zenodo.org/badge/357413541.svg)](https://zenodo.org/badge/latestdoi/357413541) 
