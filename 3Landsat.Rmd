@@ -29,7 +29,7 @@ This process is mainly important for early years in 80 and 90's. Given that few 
 Using the **5. Remove bad imagery Landsat** code in the repository you can identify which ones should not be included in the process.
 
 
-```{r my-fig4, out.width = "150%", fig.cap="Image with remaing clouds (left), original image (right)", echo=FALSE, message=FALSE}
+```{r my-fig4, out.width = "150%", fig.cap="Image with remaining clouds after "pixel_qa" masking (left), original image (right)", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/bad.PNG")
 ```
 
@@ -258,7 +258,7 @@ We use Image Segmentation SNIC algorithm for classification. For building the cl
 'SOIL_NDFI', 'NPV_NDFI', 'NDVI', 'MNDWI', 'MVI', 'CMRI', 'NBR'] 
 ```  
 
-However you can add your own indices once you save the main library ('users/murillop/NASA_mangroves:mangroves');
+However you can add your own indices once you save the main library ('users/murillop/mapping_mangroves:mangroves');
 in your own repository. 
 
 ```{r eval=FALSE}
@@ -408,7 +408,7 @@ knitr::include_graphics("images/landcover.gif")
 
 ### Limitations
 
-Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach. For instance, in this study case we use 200 points for each class, but points could be located at the same cluster.
+Outcome maps for this approach will depend on the quality of your input Landsat data, basemap detail and also training data. I recommend to collect historical data from other years and limited the amount of sampled points if you use the object-based approach. For instance, in this study case I use 200 points for each class, but points could be located at the same cluster.
 
 While the accuracy depends of many factors are methodology combines the current state-of-the-art elements to be repeatable and reproducible in any other part of the world.
 

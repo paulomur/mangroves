@@ -2,7 +2,7 @@
 title: "Mapping mangroves using remote sensing"
 author: "Paulo J. Murillo-Sandoval"
 # date: "`r Sys.Date()`"
-date: "April 13, 2021"
+date: "April 13, 2021... new version coming soon....."
 site: bookdown::bookdown_site
 ---
 
