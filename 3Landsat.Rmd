@@ -4,10 +4,10 @@ For mapping mangroves change using Landsat our approach is a bit different than 
 
 The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ  [**LandTrendr**](https://emapr.github.io/LT-GEE/landtrendr.html){target="_blank"} algorithm.
 
-Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from LandTrendr.
+Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from LandTrendr. However, the code can be set up to create different ranges of composites for instance 2, 3, 4 year composites!
 
 This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
-filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps  
+filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps.  
 
 
 ```{r my-fig3, out.width = "450px",fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
@@ -22,9 +22,9 @@ In tropical areas clouds and lack of Landsat observations affect tracking evolut
 
 ### Remove bad imagery 
 
-In some cases even after masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.
+In some cases even after masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want to create. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.
 
-This process is mainly important for early years in 80 and 90's. Given that few images are available. In somecases only one with problems can affect our final composite product.
+This process is mostly important for early years in 80 and 90's. Given few images available and problems with Landsat cloud masking. In some cases only one with problems can affect our final composite product.
 
 Using the **5. Remove bad imagery Landsat** code in the repository you can identify which ones should not be included in the process.
 
@@ -49,7 +49,7 @@ var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box
 ### Input parameters (1)
 
 Common parameters in LandTrendr includes the name of the task, region, years and others.
-In this example we use NBR as main index for segmentation and the new fitted bands will be the spectral bands 
+In this example we use MVI as main index for segmentation and the new fitted bands will be the spectral bands 
 from Landsat. Our fitted data outputs could be also other indices not necessarily the Landsat spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The code that includes all next steps is
 **6. Get_Fiited_data_and_Percentiles_Landsat**
 
@@ -61,7 +61,7 @@ var startYear = 1985; // what year do you want to start the time series
 var endYear = 2020; // what year do you want to end the time series
 var startDay =['01-01']; // what is the beginning of date filter | month-day
 var endDay =  ['12-31']; // what is the end of date filter | month-day
-var indexList = [['NBR', -1, true]];  // The indices to segment on and the invert coefficient
+var indexList = [['MVI', -1, true]];  // The indices to segment on and the invert coefficient
 var ftvList = ['B1', 'B2', 'B3', 'B4', 'B5', 'B7']; // List of images to export
 var vertList =[];// 'YRS', 'SRC', 'FIT'
 var mosaicType = "medoid"; // how to make annual mosaic - options: "medoid", "targetDay"
@@ -72,7 +72,7 @@ var affine = [30.0, 0, 15.0, 0, -30.0, 15.0];
 var aoiBuffer = 30; //1 pixel
 ```
 
-This inputs can be modified to export many different regions at the same time. For instance if you have a FeatureCollection with a field called **PATH_ROW** and the values names are ('7058','7059') you can export them individually as:
+These inputs can be modified to export many different regions at the same time. For instance if you have a FeatureCollection with a field called **PATH_ROW** and the values names are ('7058','7059') you can export them individually as:
 
 ```{r eval=FALSE}
 var featureValues = ['7058', '7059']; // Name  it is useful if you want to export many different regions
@@ -84,9 +84,9 @@ var featureKey = 'PATH_ROW';      // Name 2 // Name of the field
 This code has many improvements:
 1) Topographic correction
 2) Remove scenes borders (-2km buffer)
+3) Clumping the data between 0-10000.
 3) Many different vegetation indices for temporal segmentation
-4) You can create composites at different intervals. But it is most
-effective (computationally) for creating composites each 3 or more years.
+4) You can create composites at different intervals. In this case, I use 3-year composites.
 
 More details about this on: https://emapr.github.io/LT-GEE/landtrendr.html
 
@@ -94,7 +94,7 @@ More details about this on: https://emapr.github.io/LT-GEE/landtrendr.html
 ### Input parameters (2)
 
 LandTrendr works over annual composites. In some regions, it is possible to use annual observations however in the Colombian Pacific there is too few data. The only alternative is to increase the 
-temporal window. In this case we use three-year composites from 1985-2020. In other words we have 12 temporal periods for tracking mangroves extent and change. This code helps to create composites every one, two or any window you want.
+temporal window. In this case I use 3-year composites from 1985-2020. In other words we have 12 temporal periods for tracking mangroves extent and change. This code helps to create composites every one, two or any window you want.
 However, if you want to change epochLen, you also have to consider changing the startYear and endYear because the epoch might not exactly match with the amount of years. 
 
 In this cases our startYear = 1985, endYear=2020 and our epochLen =3
