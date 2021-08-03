@@ -29,7 +29,7 @@ This process is mostly important for early years in 80 and 90's. Given few image
 Using the **5. Remove bad imagery Landsat** code in the repository you can identify which ones should not be included in the process.
 
 
-```{r my-fig4, out.width = "150%", fig.cap="Image with remaining clouds after "pixel_qa" masking (left), original image (right)", echo=FALSE, message=FALSE}
+```{r my-fig4, out.width = "150%", fig.cap="Image with remaining clouds after pixel_qa masking (left), original image (right)", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/bad.PNG")
 ```
 
