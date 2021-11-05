@@ -1,11 +1,11 @@
 # Mapping mangroves using Sentinel1&2
 
-I used Colombia as study region for this analysis. However, the method can be applied everywhere. The steps to map mangroves and other common land cover classes are:
+I used Colombia as study region for this  analysis. However, the method can be applied everywhere. The steps to map mangroves and other common land cover classes are:
 
 
-1. Pre-processing/Exporting Sentinel-1 and Sentinel-2
-2. Organizing a basemap (get training data!!!)
-3. Applying an object-based classifier
+1. Pre-processing/Exporting Sentinel-1 and Sentinel-2.
+2. Organizing a basemap (get training data!!!).
+3. Applying an object-based classifier. 
 
 
 All previous steps can be easily modified for specific regions and conditions.

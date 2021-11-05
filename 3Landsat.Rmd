@@ -1,6 +1,6 @@
 # Mapping mangroves using Landsat
 
-For mapping mangroves change using Landsat our approach is a bit different than for S1+S2.
+For ..... mapping mangroves change using Landsat our approach is a bit different than for S1+S2!
 
 The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ  [**LandTrendr**](https://emapr.github.io/LT-GEE/landtrendr.html){target="_blank"} algorithm.
 
