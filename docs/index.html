@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Mapping mangroves using remote sensing</title>
   <meta name="description" content="Mapping mangroves using remote sensing" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Mapping mangroves using remote sensing" />
   <meta property="og:type" content="book" />
@@ -32,8 +32,9 @@
   
 
 <link rel="next" href="mapping-mangroves-using-sentinel12.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,7 +50,8 @@
 
 
 
-
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -116,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -191,8 +194,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Mangroves play a critical role in our social, economic, and ecological resources, but there are gaps in our understanding of carbon accounting and management. While mangroves forest occupy less than 0.1% of Earth’s surface they store up to 10 times more carbon per hectare than terrestrial forests. This is why we use field and remote observations to monitor its status.</p>
 <p>This tutorial uses different satellite imagery to map the current extent of mangroves using Sentinel 1 &amp; 2 and historically using Landsat legacy. This project is funded by <a href="https://www.silvacarbon.org/" target="_blank"><strong>SilvaCarbon</strong></a> and the study region is Colombia.</p>
 <p>More info about other mangroves related projects <strong><a href="https://mangrovescience.org/" class="uri">https://mangrovescience.org/</a></strong> (PI. Lola Fatoyinbo)</p>
-<div class="figure"><span id="fig:my-fig"></span>
-<img src="images/mangroves.jpg" alt="Mangroves Source: Pixabay" width="720" />
+<div class="figure"><span style="display:block;" id="fig:my-fig"></span>
+<img src="images/mangroves.jpg" alt="Mangroves Source: Pixabay"  />
 <p class="caption">
 Figure 1.1: Mangroves Source: Pixabay
 </p>
@@ -210,7 +213,6 @@ Figure 1.1: Mangroves Source: Pixabay
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -229,6 +231,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -249,6 +252,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

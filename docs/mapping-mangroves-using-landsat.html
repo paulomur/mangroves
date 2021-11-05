@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3 Mapping mangroves using Landsat | Mapping mangroves using remote sensing</title>
   <meta name="description" content="3 Mapping mangroves using Landsat | Mapping mangroves using remote sensing" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3 Mapping mangroves using Landsat | Mapping mangroves using remote sensing" />
   <meta property="og:type" content="book" />
@@ -32,8 +32,9 @@
   
 <link rel="prev" href="mapping-mangroves-using-sentinel12.html"/>
 
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,7 +50,8 @@
 
 
 
-
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -117,6 +119,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -183,12 +186,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="mapping-mangroves-using-landsat" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Mapping mangroves using Landsat</h1>
-<p>For mapping mangroves change using Landsat our approach is a bit different than for S1+S2.</p>
+<p>For mapping mangroves change using Landsat our approach is a bit different than for S1+S2!</p>
 <p>The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ <a href="https://emapr.github.io/LT-GEE/landtrendr.html" target="_blank"><strong>LandTrendr</strong></a> algorithm.</p>
 <p>Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from LandTrendr. However, the code can be set up to create different ranges of composites for instance 2, 3, 4 year composites!</p>
 <p>This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
 filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps.</p>
-<div class="figure"><span id="fig:my-fig3"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig3"></span>
 <img src="images/LandTrendr.png" alt="LandTrendr segmentation example" width="450px" />
 <p class="caption">
 Figure 3.1: LandTrendr segmentation example
@@ -203,7 +206,7 @@ In tropical areas clouds and lack of Landsat observations affect tracking evolut
 <p>In some cases even after masking out clouds, some images remain with them. Those images can affect seriously the composites we finally want to create. Specially in coastal areas is very common to find problems with images and other artifacts. One way to remove them is comparing original image vs cloud masking image. If clouds remains after masking, we should select the image ID and remove it from the ImageCollection.</p>
 <p>This process is mostly important for early years in 80 and 90’s. Given few images available and problems with Landsat cloud masking. In some cases only one with problems can affect our final composite product.</p>
 <p>Using the <strong>5. Remove bad imagery Landsat</strong> code in the repository you can identify which ones should not be included in the process.</p>
-<div class="figure"><span id="fig:my-fig4"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig4"></span>
 <img src="images/bad.PNG" alt="Image with remaining clouds after pixel_qa masking (left), original image (right)" width="150%" />
 <p class="caption">
 Figure 3.2: Image with remaining clouds after pixel_qa masking (left), original image (right)
@@ -260,7 +263,7 @@ from Landsat. Our fitted data outputs could be also other indices not necessaril
 temporal window. In this case I use 3-year composites from 1985-2020. In other words we have 12 temporal periods for tracking mangroves extent and change. This code helps to create composites every one, two or any window you want.
 However, if you want to change epochLen, you also have to consider changing the startYear and endYear because the epoch might not exactly match with the amount of years.</p>
 <p>In this cases our startYear = 1985, endYear=2020 and our epochLen =3</p>
-<div class="figure"><span id="fig:my-fig5"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig5"></span>
 <img src="images/epochs.PNG" alt="Epochs" width="30%" />
 <p class="caption">
 Figure 3.3: Epochs
@@ -272,7 +275,7 @@ Figure 3.3: Epochs
 <p>Medoid is a good strategy to create our composites. However, we can add more spectral information to improve classification. Using the same code we added the Percentile 20, 80 and Standard Deviation.
 Before running the code, you must create an ImageCollection in you Earth Engine account. This Collection will host all these additional information.</p>
 <p>To create an ImageCollection: You can just go to Assest Tab, New, Image Collection.</p>
-<div class="figure"><span id="fig:my-fig6"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig6"></span>
 <img src="images/imagecol.PNG" alt="Create a ImageCollection" width="30%" />
 <p class="caption">
 Figure 3.4: Create a ImageCollection
@@ -303,7 +306,7 @@ Figure 3.4: Create a ImageCollection
 <div id="exporting-assets" class="section level3" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Exporting assets</h3>
 <p>After you remove bad images and change parameters you can export the fitted image plus the percentiles as an ImageCollection. Given this process is very demanding computationally it might takes some minutes after you are able export the data. You should see something like this:</p>
-<div class="figure"><span id="fig:my-fig7"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig7"></span>
 <img src="images/tasks.PNG" alt="Tasks" width="50%" />
 <p class="caption">
 Figure 3.5: Tasks
@@ -395,7 +398,7 @@ Also we can import the basemap from which we want to collect the spectral data. 
 <span id="cb17-39"><a href="mapping-mangroves-using-landsat.html#cb17-39" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;GRAY_savg&#39;</span>, <span class="st">&#39;GRAY_var&#39;</span>, <span class="st">&#39;GRAY_ent&#39;</span>, <span class="st">&#39;GRAY_contrast&#39;</span>,</span>
 <span id="cb17-40"><a href="mapping-mangroves-using-landsat.html#cb17-40" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&#39;ELEVATION&#39;</span>, <span class="st">&#39;DEM_SLOPE&#39;</span> , <span class="st">&#39;ASPECT&#39;</span>,  <span class="st">&#39;TEMPERATURE&#39;</span>, <span class="st">&#39;NIGHT_LIGHTS&#39;</span>, <span class="st">&#39;POPULATION&#39;</span>];</span></code></pre></div>
 <p>We distributed 200 per each class. See example of the distribution:</p>
-<div class="figure"><span id="fig:my-fig8"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig8"></span>
 <img src="images/cienaga.PNG" alt="Sampled points over Landsat composite 2017-2020" width="450px" />
 <p class="caption">
 Figure 3.6: Sampled points over Landsat composite 2017-2020
@@ -497,7 +500,7 @@ in your own repository.</p>
 <span id="cb21-36"><a href="mapping-mangroves-using-landsat.html#cb21-36" aria-hidden="true" tabindex="-1"></a>      hAxis<span class="sc">:</span> {title<span class="sc">:</span> <span class="st">&#39;Number of Tress&#39;</span>, gridlines<span class="sc">:</span> {count<span class="sc">:</span> <span class="dv">15</span>}}</span>
 <span id="cb21-37"><a href="mapping-mangroves-using-landsat.html#cb21-37" aria-hidden="true" tabindex="-1"></a>  });</span>
 <span id="cb21-38"><a href="mapping-mangroves-using-landsat.html#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(chart);</span></code></pre></div>
-<div class="figure"><span id="fig:my-fig9"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig9"></span>
 <img src="images/hypertunning.PNG" alt="Accuracy and amount of trees" width="450px" />
 <p class="caption">
 Figure 3.7: Accuracy and amount of trees
@@ -538,7 +541,7 @@ Figure 3.7: Accuracy and amount of trees
 <h3><span class="header-section-number">3.2.5</span> Maps visualization</h3>
 <p>We created a gif to visualize the dynamics of mangroves in Cienaga Grande. Our approach provides a quick reference to evaluate mangroves potential loss and gains. While there is a high variability along time in this study region, further validation and cleaning the outputs is necessary.</p>
 <p>We encourage potential users to add or remove spectral metrics and careful select training data to improve current outputs.</p>
-<div class="figure"><span id="fig:myfig10"></span>
+<div class="figure"><span style="display:block;" id="fig:myfig10"></span>
 <img src="images/Fitted.gif" alt="Comparing Landsat vs Land cover maps" width="50%" /><img src="images/landcover.gif" alt="Comparing Landsat vs Land cover maps" width="50%" />
 <p class="caption">
 Figure 3.8: Comparing Landsat vs Land cover maps
@@ -570,7 +573,6 @@ Figure 3.8: Comparing Landsat vs Land cover maps
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -589,6 +591,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -609,6 +612,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing</title>
   <meta name="description" content="2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Mapping mangroves using Sentinel1&amp;2 | Mapping mangroves using remote sensing" />
   <meta property="og:type" content="book" />
@@ -32,8 +32,9 @@
   
 <link rel="prev" href="index.html"/>
 <link rel="next" href="mapping-mangroves-using-landsat.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,7 +50,8 @@
 
 
 
-
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -116,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -185,9 +188,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">2</span> Mapping mangroves using Sentinel1&amp;2</h1>
 <p>I used Colombia as study region for this analysis. However, the method can be applied everywhere. The steps to map mangroves and other common land cover classes are:</p>
 <ol style="list-style-type: decimal">
-<li>Pre-processing/Exporting Sentinel-1 and Sentinel-2</li>
-<li>Organizing a basemap (get training data!!!)</li>
-<li>Applying an object-based classifier</li>
+<li>Pre-processing/Exporting Sentinel-1 and Sentinel-2.</li>
+<li>Organizing a basemap (get training data!!!).</li>
+<li>Applying an object-based classifier.</li>
 </ol>
 <p>All previous steps can be easily modified for specific regions and conditions.</p>
 <p>First thing is adding the repository to your Earth Engine account:</p>
@@ -316,7 +319,7 @@ See code <strong>3.Accuracy_test_S1_S2</strong></p>
 <p>Finally, post-processing is needed to clean out final map. Using the Digital Elevation model
 and some geometries for the Caribbean and Pacific regions were used to produce the final map.
 See code <strong>4.Cleaning S1_S2_classification</strong></p>
-<div class="figure"><span id="fig:my-fig2"></span>
+<div class="figure"><span style="display:block;" id="fig:my-fig2"></span>
 <img src="images/s1s2_gif.gif" alt="Buenaventura classification" width="650px" />
 <p class="caption">
 Figure 2.1: Buenaventura classification
@@ -335,7 +338,6 @@ Figure 2.1: Buenaventura classification
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -354,6 +356,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -374,6 +377,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
