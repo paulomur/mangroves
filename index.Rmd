@@ -13,8 +13,8 @@ Mangroves play a critical role in our social, economic, and ecological resources
 This tutorial uses different satellite imagery to map the current extent of mangroves using Sentinel 1 & 2 and historically using the Landsat legacy. This project is funded by [**SilvaCarbon**](https://www.silvacarbon.org/){target="_blank"} and the study region is Colombia.
 
 More info about other mangroves related projects **https://mangrovescience.org/** (PI. Lola Fatoyinbo)
-You can cite this as: [![DOI](https://zenodo.org/badge/357413541.svg)](https://zenodo.org/badge/latestdoi/357413541).
-This tutorial is part of a scientific paper under *review*. 
+You can cite this tutorial as: [![DOI](https://zenodo.org/badge/357413541.svg)](https://zenodo.org/badge/latestdoi/357413541).
+This tutorial is also part of a scientific paper *under review*. 
 
 
 ```{r my-fig,  fig.cap="Mangroves Source: Pixabay", echo=FALSE, message=FALSE}
