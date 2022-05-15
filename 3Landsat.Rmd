@@ -10,7 +10,7 @@ There are many ways to set up LandTrendr. Two different approaches are available
 
 2. We can create annual composites after removing bad Landsat images.
 
-This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
+This Figure 3.1 shows a simple way to linearly improve the original spectral data from Landsat but also
 filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps.  Depends on the geographic region you can use 1, 2, or 3 years
 to create your composites.
 
