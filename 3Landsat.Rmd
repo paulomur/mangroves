@@ -1,16 +1,21 @@
 # Mapping mangroves using Landsat
 
-For ..... mapping mangroves change using Landsat our approach is a bit different than for S1+S2!
+For mapping mangroves change using Landsat our approach is a bit different than for S1+S2!
 
-The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing year I employ  [**LandTrendr**](https://emapr.github.io/LT-GEE/landtrendr.html){target="_blank"} algorithm.
+The Colombian Pacific is the most rainy region worldwide, consequently obtain cloud-free optical data is very difficult for this region. To improve spectral data and filling gaps for missing years we employ  [**LandTrendr**](https://emapr.github.io/LT-GEE/landtrendr.html){target="_blank"} algorithm.
 
-Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from LandTrendr. However, the code can be set up to create different ranges of composites for instance 2, 3, 4 year composites!
+There are many ways to set up LandTrendr. Two different approaches are available in our approach:
+
+1. Given the lack of images we create 3-year composites from 1985-2020 that were linearly improved using temporal segmentation from LandTrendr. However, the code can be set up to create different ranges of composites for instance 2, 3, 4 year composites or
+
+2. We can create annual composites after removing bad Landsat images.
 
 This Figure shows a simple way to linearly improve the original spectral data from Landsat but also
-filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps.  
+filling gaps in periods in which few observations were available. This process guarantees a much spectro-temporal stability of the data that might helps to produce better land cover land use maps.  Depends on the geographic region you can use 1, 2, or 3 years
+to create your composites.
 
 
-```{r my-fig3, out.width = "450px",fig.cap="LandTrendr segmentation example", echo=FALSE, message=FALSE}
+```{r my-fig3, out.width = "450px",fig.cap="LandTrendr segmentation example using 3-years composite", echo=FALSE, message=FALSE}
 knitr::include_graphics("images/LandTrendr.png")
 ```
 
@@ -50,9 +55,10 @@ var getSRcollection = function(firstYear,lastYear, startDay, endDay, sensor, box
 
 Common parameters in LandTrendr includes the name of the task, region, years and others.
 In this example we use MVI as main index for segmentation and the new fitted bands will be the spectral bands 
-from Landsat. Our fitted data outputs could be also other indices not necessarily the Landsat spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The code that includes all next steps is
-**6. Get_Fiited_data_and_Percentiles_Landsat**
+from Landsat. Our fitted data outputs could be also other indices not necessarily the Landsat spectral bands. We use "Medoid" to create the composites but we can also used a targetDay. The codes that includes all next steps are 
+**6. Get_Fitted_data_and_Percentiles_Landsat** or **6. Get_Fitted_data_and_Percentiles_Landsat_annually**
 
+A general description looks like: 
 ```{r eval=FALSE}
 var featureValues = ['Man']; // Name  it is useful if you want to export many different regions
 var featureCol = geometry;   // Region to be exported
@@ -86,7 +92,13 @@ This code has many improvements:
 2) Remove scenes borders (-2km buffer)
 3) Clumping the data between 0-10000.
 3) Many different vegetation indices for temporal segmentation
-4) You can create composites at different intervals. In this case, I use 3-year composites.
+4) You can create composites at different intervals. In this particular case, I use 3-year composites.
+5) Annual composites works pretty similar. Main difference is how you export the percentiles and std. 
+They are exported individually if needed. For instance:
+
+```{r eval=FALSE}
+var mosaicType = "std"; // how to make annual mosaic - options: "medoid", "targetDay", "per20" "per80"
+```
 
 More details about this on: https://emapr.github.io/LT-GEE/landtrendr.html
 
