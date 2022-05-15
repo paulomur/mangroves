@@ -1,8 +1,8 @@
 --- 
-title: "Mapping mangroves using LandTredr fitted values"
+title: "Mapping mangroves using LandTrendr fitted values"
 author: "Paulo J. Murillo-Sandoval"
 # date: "`r Sys.Date()`"
-date: "April 13, 2021... new version coming soon....."
+date: "Last version: May 13, 2022"
 site: bookdown::bookdown_site
 ---
 
